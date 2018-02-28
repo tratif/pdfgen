@@ -1,27 +1,31 @@
 package com.tratif.pdfgen.document;
 
+import com.tratif.pdfgen.helpers.CommandLineExecutor;
+
 import java.io.File;
 import java.nio.file.Files;
 
-public class DocumentDetails {
+public class DocumentBuilder {
 
     private String content;
 
-    DocumentDetails(String content) {
+    DocumentBuilder(String content) {
         this.content = content;
     }
 
     public byte[] toPdf() {
-        Runtime runtime = Runtime.getRuntime();
         try {
-            String cmdTemplate = "wkhtmltopdf %s %s";
-
             File html = File.createTempFile("123", ".html");
             File pdf = File.createTempFile("123", ".pdf");
             Files.write(html.toPath(), content.getBytes());
 
-            Process process = runtime.exec(String.format(cmdTemplate, html.getPath(), pdf.getPath()));
-            process.waitFor();
+            CommandLineExecutor executor = new CommandLineExecutor();
+            executor.command("wkhtmltopdf")
+                    .withArgument(html.toPath().toString())
+                    .withArgument(pdf.toPath().toString())
+                    .execute()
+                    .waitFor();
+
             byte[] bytes = Files.readAllBytes(pdf.toPath());
 
             html.delete();

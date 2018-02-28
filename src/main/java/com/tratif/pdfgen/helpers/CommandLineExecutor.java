@@ -15,6 +15,7 @@ public class CommandLineExecutor {
     }
 
     public CommandLineExecutor command(String cmd) {
+        args = new ArrayList<>();
         this.cmd = cmd;
         return this;
     }

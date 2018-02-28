@@ -7,6 +7,8 @@ import java.nio.file.Files;
 
 public class DocumentBuilder {
 
+    private final String FILE_PREFIX = "pdfgen";
+
     private String content;
 
     DocumentBuilder(String content) {
@@ -15,12 +17,13 @@ public class DocumentBuilder {
 
     public byte[] toPdf() {
         try {
-            File html = File.createTempFile("123", ".html");
-            File pdf = File.createTempFile("123", ".pdf");
+            File html = File.createTempFile(FILE_PREFIX, ".html");
+            File pdf = File.createTempFile(FILE_PREFIX, ".pdf");
             Files.write(html.toPath(), content.getBytes());
 
             CommandLineExecutor executor = new CommandLineExecutor();
             executor.command("wkhtmltopdf")
+                    .withArgument("--encoding utf-8")
                     .withArgument(html.toPath().toString())
                     .withArgument(pdf.toPath().toString())
                     .execute()

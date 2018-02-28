@@ -49,17 +49,4 @@ public class DocumentBuilderTest {
 
         Assertions.fail("Bad file");
     }
-
-//    @Test
-//    public void containsProvidedText() {
-//        byte[] bytes = Document.fromStaticHtml("<h1>hello, world!</h1>")
-//                .toPdf();
-//
-//        String content = new String(bytes, StandardCharsets.UTF_8);
-//
-//
-//
-//        assertThat(content).containsSequence("hello")
-//        .containsSequence("world");
-//    }
 }

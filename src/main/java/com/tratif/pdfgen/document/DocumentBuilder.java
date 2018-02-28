@@ -7,10 +7,11 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 
 public class DocumentBuilder {
 
-    private final static Logger LOG = LoggerFactory.getLogger(DocumentBuilder.class);
+    private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
     private final String TEMP_FILE_PREFIX = "pdfgen";
 
     private String content;
@@ -36,18 +37,18 @@ public class DocumentBuilder {
             byte[] bytes = Files.readAllBytes(pdf.toPath());
 
             if(!html.delete())
-                LOG.warn(html.getPath() + " was not deleted.");
+                log.warn("{} was not deleted.", html.getPath());
 
             if(!pdf.delete())
-                LOG.warn(pdf.getPath() + " was not deleted.");
+                log.warn("{} was not deleted.", pdf.getPath());
 
             return bytes;
 
         } catch (InterruptedException e) {
-            LOG.error("There was problem executing command.");
+            log.error("There was problem executing command.");
             throw new RuntimeException("There was problem executing command.", e);
         } catch (IOException e) {
-            LOG.error("There was a problem with the file.");
+            log.error("There was a problem with the file.");
             throw new RuntimeException("There was a problem with the file.", e);
         }
     }

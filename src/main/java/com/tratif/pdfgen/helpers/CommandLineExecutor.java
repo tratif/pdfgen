@@ -33,7 +33,7 @@ public class CommandLineExecutor {
         try {
             return runtime.exec(joiner.toString());
         } catch(IOException e) {
-            throw new RuntimeException("Running command has failed.");
+            throw new RuntimeException("Running command has failed.", e);
         }
     }
 }

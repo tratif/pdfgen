@@ -36,10 +36,10 @@ public class DocumentBuilder {
 
             byte[] bytes = Files.readAllBytes(pdf.toPath());
 
-            if(!html.delete())
+            if (!html.delete())
                 log.warn("{} was not deleted.", html.getPath());
 
-            if(!pdf.delete())
+            if (!pdf.delete())
                 log.warn("{} was not deleted.", pdf.getPath());
 
             return bytes;

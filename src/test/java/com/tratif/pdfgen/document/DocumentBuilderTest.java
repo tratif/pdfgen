@@ -1,5 +1,6 @@
 package com.tratif.pdfgen.document;
 
+import com.tratif.pdfgen.asserts.PdfAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -12,8 +13,9 @@ public class DocumentBuilderTest {
         byte[] bytes = Document.fromStaticHtml("<h1>hello, world!</h1>")
                 .toPdf();
 
-        assertThat(bytes).isNotNull();
-        assertThat(bytes.length).isGreaterThan(4);
+        PdfAssert.assertThat(bytes)
+                .isNotNull()
+                .hasMinimumLength(4);
 
         // header
         assertThat(bytes[0]).isEqualTo((byte) 0x25); // %

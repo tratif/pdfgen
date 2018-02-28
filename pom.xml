@@ -6,6 +6,6 @@
 
     <groupId>com.tratif</groupId>
     <artifactId>pdfgen</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
 
 </project>

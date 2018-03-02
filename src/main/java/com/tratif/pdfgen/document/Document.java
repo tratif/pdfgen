@@ -1,10 +1,9 @@
 package com.tratif.pdfgen.document;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -15,7 +14,7 @@ public class Document {
         return new DocumentBuilder(html);
     }
 
-    public static DocumentBuilder fromStaticHtml(InputStream inputStream) throws IOException {
+    public static DocumentBuilder fromStaticHtml(InputStream inputStream) {
         List<String> lines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
                 .lines()
                 .collect(Collectors.toList());
@@ -23,22 +22,38 @@ public class Document {
         StringJoiner joiner = new StringJoiner(" ");
         lines.forEach(joiner::add);
 
-        return new DocumentBuilder(joiner.toString());
+        return fromStaticHtml(joiner.toString());
     }
 
-//    public static DocumentBuilder fromStaticHtml(Reader reader) {
-//
-//    }
-//
-//    public static DocumentBuilder fromStaticHtml(URL url) {
-//
-//    }
-//
-//    public static DocumentBuilder fromStaticHtml(File file) {
-//
-//    }
-//
-//    public static DocumentBuilder fromStaticHtml(Path path) {
-//
-//    }
+    public static DocumentBuilder fromStaticHtml(Reader reader) {
+        try (BufferedReader br = new BufferedReader(reader)) {
+            StringBuilder sb = new StringBuilder();
+            br.lines()
+                    .forEach(sb::append);
+
+            return fromStaticHtml(sb.toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed closing the reader.", e);
+        }
+    }
+
+    public static DocumentBuilder fromStaticHtml(URL url) {
+        try {
+            return fromStaticHtml(new InputStreamReader(url.openStream()));
+        } catch(IOException e) {
+            throw new RuntimeException("Failed opening url stream", e);
+        }
+    }
+
+    public static DocumentBuilder fromStaticHtml(File file) {
+        try {
+            return fromStaticHtml(new FileInputStream(file));
+        } catch(FileNotFoundException e) {
+            throw new RuntimeException("File not found", e);
+        }
+    }
+
+    public static DocumentBuilder fromStaticHtml(Path path) {
+        return fromStaticHtml(path.toFile());
+    }
 }

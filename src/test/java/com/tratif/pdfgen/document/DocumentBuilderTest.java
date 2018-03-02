@@ -1,26 +1,17 @@
 package com.tratif.pdfgen.document;
 
-import com.tratif.pdfgen.asserts.PdfAssert;
 import org.junit.Test;
+
+import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
 
 public class DocumentBuilderTest {
 
     @Test
-    public void isProperPdfFile() {
-        byte[] bytes = Document.fromStaticHtml("<h1>hello, world!</h1>")
+    public void generatesProperPdfFile() {
+        byte[] pdfContent = Document.fromStaticHtml("<h1>hello, world!</h1>")
                 .toPdf();
 
-        PdfAssert.assertThat(bytes)
+        assertThat(pdfContent)
                 .isProperPdfFile();
-    }
-
-    @Test
-    public void containsString() {
-        byte[] bytes = Document.fromStaticHtml("<h1>hello, world!</h1>")
-                .toPdf();
-
-        PdfAssert.assertThat(bytes)
-                .contains("hello")
-                .contains("world");
     }
 }

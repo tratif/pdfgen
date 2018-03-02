@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DocumentTest {
 
     @Test
-    public void hasProperContentFromString() {
+    public void pdfHasProperContentFromString() {
         String html = "<h1>Hello world</h1>";
         PdfAssert.assertThat(Document.fromStaticHtml(html).toPdf())
                 .contains("Hello")
@@ -23,7 +23,7 @@ public class DocumentTest {
     }
 
     @Test
-    public void hasProperContentFromInputStream() {
+    public void pdfHasProperContentFromInputStream() {
         InputStream inputStream = new ByteArrayInputStream("<h1>Hello world</h1>".getBytes());
         PdfAssert.assertThat(Document.fromStaticHtml(inputStream).toPdf())
                 .contains("Hello")
@@ -31,7 +31,7 @@ public class DocumentTest {
     }
 
     @Test
-    public void hasProperContentFromReader() {
+    public void pdfHasProperContentFromReader() {
         Reader reader = new StringReader("<h1>Hello world</h1>");
         PdfAssert.assertThat(Document.fromStaticHtml(reader).toPdf())
                 .contains("Hello")

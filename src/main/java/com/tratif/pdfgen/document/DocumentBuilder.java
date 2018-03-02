@@ -51,8 +51,4 @@ public class DocumentBuilder {
             throw new RuntimeException("There was a problem with the file.", e);
         }
     }
-
-    public String getContent() {
-        return content;
-    }
 }

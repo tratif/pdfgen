@@ -11,7 +11,16 @@ public class DocumentBuilderTest {
                 .toPdf();
 
         PdfAssert.assertThat(bytes)
-                .isNotNull()
                 .isProperPdfFile();
+    }
+
+    @Test
+    public void containsString() {
+        byte[] bytes = Document.fromStaticHtml("<h1>hello, world!</h1>")
+                .toPdf();
+
+        PdfAssert.assertThat(bytes)
+                .contains("hello")
+                .contains("world");
     }
 }

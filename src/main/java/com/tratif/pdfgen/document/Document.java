@@ -6,7 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class Document {
 
@@ -17,7 +18,7 @@ public class Document {
     public static DocumentBuilder fromStaticHtml(InputStream inputStream) {
         List<String> lines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
                 .lines()
-                .collect(Collectors.toList());
+                .collect(toList());
 
         StringJoiner joiner = new StringJoiner(" ");
         lines.forEach(joiner::add);

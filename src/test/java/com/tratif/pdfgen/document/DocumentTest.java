@@ -1,5 +1,6 @@
 package com.tratif.pdfgen.document;
 
+import com.tratif.pdfgen.asserts.PdfAssert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -13,26 +14,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DocumentTest {
 
-    @Rule
-    ExpectedException exception = ExpectedException.none();
-
     @Test
     public void hasProperContentFromString() {
-        assertThat(Document.fromStaticHtml("<h1>Hello world</h1>").getContent())
-                .isEqualTo("<h1>Hello world</h1>");
+        String html = "<h1>Hello world</h1>";
+        PdfAssert.assertThat(Document.fromStaticHtml(html).toPdf())
+                .contains("Hello")
+                .contains("world");
     }
 
     @Test
     public void hasProperContentFromInputStream() {
         InputStream inputStream = new ByteArrayInputStream("<h1>Hello world</h1>".getBytes());
-        assertThat(Document.fromStaticHtml(inputStream).getContent())
-                .isEqualTo("<h1>Hello world</h1>");
+        PdfAssert.assertThat(Document.fromStaticHtml(inputStream).toPdf())
+                .contains("Hello")
+                .contains("world");
     }
 
     @Test
     public void hasProperContentFromReader() {
         Reader reader = new StringReader("<h1>Hello world</h1>");
-        assertThat(Document.fromStaticHtml(reader).getContent())
-                .isEqualTo("<h1>Hello world</h1>");
+        PdfAssert.assertThat(Document.fromStaticHtml(reader).toPdf())
+                .contains("Hello")
+                .contains("world");
     }
 }

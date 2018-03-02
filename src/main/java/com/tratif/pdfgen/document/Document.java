@@ -2,7 +2,6 @@ package com.tratif.pdfgen.document;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.io.File;
@@ -41,12 +40,12 @@ public class Document {
     }
 
     public static DocumentBuilder fromHtmlTemplate(String html, Map<String, Object> args) {
-        ITemplateResolver resolver = new StringTemplateResolver();
         TemplateEngine engine = new TemplateEngine();
-        engine.setTemplateResolver(resolver);
+        engine.setTemplateResolver(new StringTemplateResolver());
 
         StringWriter sw = new StringWriter();
-        Context context = new Context(Locale.forLanguageTag("PL"), args);
+        Context context = new Context();
+        context.setVariables(args);
         engine.process(html, context, sw);
 
         return new DocumentBuilder(sw.toString());

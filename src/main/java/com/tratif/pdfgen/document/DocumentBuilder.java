@@ -7,29 +7,38 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DocumentBuilder {
 
     private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
     private final String TEMP_FILE_PREFIX = "pdfgen";
 
-    private String content;
+    private String html;
+    private Map<String, String> properties;
 
-    DocumentBuilder(String content) {
-        this.content = content;
+    DocumentBuilder(String html) {
+        this.html = html;
+        properties = new HashMap<>();
+    }
+
+    public PropertiesBuilder properties() {
+        return new PropertiesBuilder(properties);
     }
 
     public byte[] toPdf() {
         try {
             File html = File.createTempFile(TEMP_FILE_PREFIX, ".html");
             File pdf = File.createTempFile(TEMP_FILE_PREFIX, ".pdf");
-            Files.write(html.toPath(), content.getBytes());
+            Files.write(html.toPath(), this.html.getBytes());
 
             CommandLineExecutor executor = new CommandLineExecutor();
             executor.command("wkhtmltopdf")
                     .withArgument("--encoding utf-8")
                     .withArgument(html.toPath().toString())
                     .withArgument(pdf.toPath().toString())
+                    .withArguments(properties)
                     .execute()
                     .waitFor();
 
@@ -50,5 +59,9 @@ public class DocumentBuilder {
             log.error("There was a problem with the file.");
             throw new RuntimeException("There was a problem with the file.", e);
         }
+    }
+
+    public String toHtml() {
+        return html;
     }
 }

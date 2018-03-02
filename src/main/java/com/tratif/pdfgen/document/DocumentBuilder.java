@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.text.MessageFormat;
 
 public class DocumentBuilder {
 
@@ -51,5 +50,9 @@ public class DocumentBuilder {
             log.error("There was a problem with the file.");
             throw new RuntimeException("There was a problem with the file.", e);
         }
+    }
+
+    public String getContent() {
+        return content;
     }
 }

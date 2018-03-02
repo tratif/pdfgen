@@ -28,8 +28,7 @@ public class Document {
     public static DocumentBuilder fromStaticHtml(Reader reader) {
         try (BufferedReader br = new BufferedReader(reader)) {
             StringBuilder sb = new StringBuilder();
-            br.lines()
-                    .forEach(sb::append);
+            br.lines().forEach(sb::append);
 
             return fromStaticHtml(sb.toString());
         } catch (IOException e) {

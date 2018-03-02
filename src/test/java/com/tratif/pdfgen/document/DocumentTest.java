@@ -1,6 +1,7 @@
 package com.tratif.pdfgen.document;
 
 import com.tratif.pdfgen.asserts.PdfAssert;
+import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

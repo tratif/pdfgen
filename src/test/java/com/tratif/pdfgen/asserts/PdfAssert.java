@@ -1,21 +1,20 @@
 package com.tratif.pdfgen.asserts;
 
-import com.tratif.pdfgen.asserts.helpers.ImageParser;
-import org.apache.pdfbox.cos.COSDocument;
-import org.apache.pdfbox.io.RandomAccessFile;
-import org.apache.pdfbox.pdfparser.PDFParser;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
+import com.tratif.pdfgen.asserts.helpers.PDFContentProvider;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 
-import java.awt.Image;
-import java.util.List;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
+
+    private static final String TEMP_FILE_PREFIX = "pdfgen";
 
     PdfAssert(byte[] bytes) {
         super(bytes, PdfAssert.class);
@@ -76,56 +75,65 @@ public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
     public PdfAssert contains(String str) {
         isNotNull();
 
-        File file;
-        try {
-            file = File.createTempFile("pdfgen", ".pdf");
-            Files.write(file.toPath(), actual);
-        } catch(IOException e) {
-            throw new RuntimeException("Failed to create temp file or write to it.", e);
-        }
-
-        PDFTextStripper pdfStripper;
-        PDDocument pdDoc;
-        COSDocument cosDoc;
-        try {
-            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-            PDFParser parser = new PDFParser(randomAccessFile);
-            parser.parse();
-            cosDoc = parser.getDocument();
-            pdfStripper = new PDFTextStripper();
-            pdDoc = new PDDocument(cosDoc);
-            pdfStripper.setStartPage(1);
-            pdfStripper.setEndPage(5);
-            String parsedText = pdfStripper.getText(pdDoc);
-
-            Assertions.assertThat(parsedText).containsSubsequence(str);
-
-            pdDoc.close();
-            cosDoc.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        File file = writeActualToTempPdf();
+        try (PDFContentProvider provider = new PDFContentProvider(file)) {
+            Assertions.assertThat(provider.getText())
+                    .containsSubsequence(str);
         }
 
         file.delete();
         return this;
     }
 
-    public PdfAssert containsImage(Image img) {
+    public PdfAssert containsImage(BufferedImage img) {
         isNotNull();
 
+        File file = writeActualToTempPdf();
+        List<BufferedImage> images;
+        try(PDFContentProvider provider = new PDFContentProvider(file)) {
+            images = provider.getAllImages();
+        }
+
+        boolean contains = false;
+
+        for(BufferedImage pdfImg : images) {
+            if (compareImages(pdfImg, img))
+                contains = true;
+        }
+
+        assertTrue(contains);
+
+        file.delete();
+        return this;
+    }
+
+    private File writeActualToTempPdf() {
         File file;
         try {
-            file = File.createTempFile("pdfgen", ".pdf");
+            file = File.createTempFile(TEMP_FILE_PREFIX, ".pdf");
             Files.write(file.toPath(), actual);
         } catch(IOException e) {
             throw new RuntimeException("Failed to create temp file or write to it.", e);
         }
 
-        List<Image> images = ImageParser.parse(file);
+        return file;
+    }
 
-        Assertions.assertThat(images)
-                .contains(img);
+    public boolean compareImages(BufferedImage first, BufferedImage second) {
+        if (first.getWidth() != second.getWidth() || first.getHeight() != second.getHeight())
+            return false;
 
-        return this;
+        int width = first.getWidth();
+        int height = first.getHeight();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (first.getRGB(x, y) != second.getRGB(x, y)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

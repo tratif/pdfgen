@@ -1,13 +1,18 @@
 package com.tratif.pdfgen.document;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.StringJoiner;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.templateresolver.ITemplateResolver;
+import org.thymeleaf.templateresolver.StringTemplateResolver;
 
-import static java.util.stream.Collectors.toList;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Locale;
+import java.util.Map;
 
 public class Document {
 
@@ -16,44 +21,54 @@ public class Document {
     }
 
     public static DocumentBuilder fromStaticHtml(InputStream inputStream) {
-        List<String> lines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-                .lines()
-                .collect(toList());
-
-        StringJoiner joiner = new StringJoiner(" ");
-        lines.forEach(joiner::add);
-
-        return fromStaticHtml(joiner.toString());
+        return fromStaticHtml(ToStringParser.parse(inputStream));
     }
 
     public static DocumentBuilder fromStaticHtml(Reader reader) {
-        try (BufferedReader br = new BufferedReader(reader)) {
-            StringBuilder sb = new StringBuilder();
-            br.lines().forEach(sb::append);
-
-            return fromStaticHtml(sb.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed closing the reader.", e);
-        }
+        return fromStaticHtml(ToStringParser.parse(reader));
     }
 
     public static DocumentBuilder fromStaticHtml(URL url) {
-        try {
-            return fromStaticHtml(new InputStreamReader(url.openStream()));
-        } catch(IOException e) {
-            throw new RuntimeException("Failed opening url stream", e);
-        }
+        return fromStaticHtml(ToStringParser.parse(url));
     }
 
     public static DocumentBuilder fromStaticHtml(File file) {
-        try {
-            return fromStaticHtml(new FileInputStream(file));
-        } catch(FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
-        }
+        return fromStaticHtml(ToStringParser.parse(file));
     }
 
     public static DocumentBuilder fromStaticHtml(Path path) {
-        return fromStaticHtml(path.toFile());
+        return fromStaticHtml(ToStringParser.parse(path));
+    }
+
+    public static DocumentBuilder fromHtmlTemplate(String html, Map<String, Object> args) {
+        ITemplateResolver resolver = new StringTemplateResolver();
+        TemplateEngine engine = new TemplateEngine();
+        engine.setTemplateResolver(resolver);
+
+        StringWriter sw = new StringWriter();
+        Context context = new Context(Locale.forLanguageTag("PL"), args);
+        engine.process(html, context, sw);
+
+        return new DocumentBuilder(sw.toString());
+    }
+
+    public static DocumentBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> args) {
+        return fromHtmlTemplate(ToStringParser.parse(inputStream), args);
+    }
+
+    public static DocumentBuilder fromHtmlTemplate(Reader reader, Map<String, Object> args) {
+        return fromHtmlTemplate(ToStringParser.parse(reader), args);
+    }
+
+    public static DocumentBuilder fromHtmlTemplate(URL url, Map<String, Object> args) {
+        return fromHtmlTemplate(ToStringParser.parse(url), args);
+    }
+
+    public static DocumentBuilder fromHtmlTemplate(File file, Map<String, Object> args) {
+        return fromHtmlTemplate(ToStringParser.parse(file), args);
+    }
+
+    public static DocumentBuilder fromHtmlTemplate(Path path, Map<String, Object> args) {
+        return fromHtmlTemplate(ToStringParser.parse(path), args);
     }
 }

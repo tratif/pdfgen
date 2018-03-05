@@ -14,6 +14,14 @@ import java.util.Map;
 
 public class Document {
 
+    private static TemplateEngine TEMPLATE_ENGINE;
+
+    static {
+        TEMPLATE_ENGINE = new TemplateEngine();
+        TEMPLATE_ENGINE.setTemplateResolver(new StringTemplateResolver());
+    }
+
+
     public static DocumentBuilder fromStaticHtml(String html) {
         return new DocumentBuilder(html);
     }
@@ -39,13 +47,10 @@ public class Document {
     }
 
     public static DocumentBuilder fromHtmlTemplate(String html, Map<String, Object> args) {
-        TemplateEngine engine = new TemplateEngine();
-        engine.setTemplateResolver(new StringTemplateResolver());
-
         StringWriter sw = new StringWriter();
         Context context = new Context();
         context.setVariables(args);
-        engine.process(html, context, sw);
+        TEMPLATE_ENGINE.process(html, context, sw);
 
         return new DocumentBuilder(sw.toString());
     }

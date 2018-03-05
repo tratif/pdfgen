@@ -119,7 +119,7 @@ public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
         return file;
     }
 
-    public boolean compareImages(BufferedImage first, BufferedImage second) {
+    private boolean compareImages(BufferedImage first, BufferedImage second) {
         if (first.getWidth() != second.getWidth() || first.getHeight() != second.getHeight())
             return false;
 

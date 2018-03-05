@@ -34,6 +34,11 @@ public class PropertiesBuilder {
         return this;
     }
 
+    public PropertiesBuilder a4() {
+        properties.put("--page-size", "A4");
+        return this;
+    }
+
     public PropertiesBuilder zoom(double zoom) {
         properties.put("--zoom", Double.toString(zoom));
         return this;

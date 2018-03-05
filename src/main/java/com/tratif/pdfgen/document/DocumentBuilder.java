@@ -16,15 +16,15 @@ public class DocumentBuilder {
     private final String TEMP_FILE_PREFIX = "pdfgen";
 
     private String html;
-    private Map<String, String> properties;
+    private Map<String, String> params;
 
     DocumentBuilder(String html) {
         this.html = html;
-        properties = new HashMap<>();
+        params = new HashMap<>();
     }
 
-    public PropertiesBuilder properties() {
-        return new PropertiesBuilder(properties);
+    public ParameterBuilder properties() {
+        return new ParameterBuilder(params);
     }
 
     public byte[] toPdf() {
@@ -38,7 +38,7 @@ public class DocumentBuilder {
                     .withArgument("--encoding utf-8")
                     .withArgument(html.toPath().toString())
                     .withArgument(pdf.toPath().toString())
-                    .withArguments(properties)
+                    .withArguments(params)
                     .execute()
                     .waitFor();
 

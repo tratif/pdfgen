@@ -38,8 +38,12 @@ public class DocumentBuilder {
         params = new HashMap<>();
     }
 
-    public ParameterBuilder properties() {
+    public ParameterBuilder parameters() {
         return new ParameterBuilder(params);
+    }
+
+    void setParameters(Map<String, String> params) {
+        this.params = params;
     }
 
     public byte[] toPdf() {

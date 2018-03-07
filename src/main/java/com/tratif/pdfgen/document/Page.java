@@ -20,11 +20,13 @@ public class Page {
         return new ParameterBuilder(params);
     }
 
-    Map<String, String> getParams() {
-        return params;
-    }
-
     public String getContent() {
         return content;
+    }
+
+    public byte[] toPdfByteArray() {
+        DocumentBuilder db = Document.fromStaticHtml(content);
+        db.setParameters(params);
+        return db.toPdf();
     }
 }

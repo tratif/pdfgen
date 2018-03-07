@@ -55,9 +55,9 @@ public class DocumentBuilder {
             CommandLineExecutor executor = new CommandLineExecutor();
             executor.command("wkhtmltopdf")
                     .withArgument("--encoding utf-8")
+                    .withArguments(params)
                     .withArgument(html.toPath().toString())
                     .withArgument(pdf.toPath().toString())
-                    .withArguments(params)
                     .execute()
                     .waitFor();
 

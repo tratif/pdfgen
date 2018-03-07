@@ -63,6 +63,20 @@ public class DocumentBuilderTest {
                 .contains("World");
     }
 
+    @Test
+    public void rendersPdfWithAdditionalParameters() {
+        DocumentBuilder db = Document.fromStaticHtml("<h1>This is first page</h1>");
+        db.parameters()
+                .noBackground()
+                .zoom(2);
+
+        assertThat(db.toPdf())
+                .isProperPdfFile()
+                .contains("This")
+                .contains("first")
+                .contains("page");
+    }
+
     private AbstractCharSequenceAssert<?, String> assertThatHtml(String html) {
         return Assertions.assertThat(html);
     }

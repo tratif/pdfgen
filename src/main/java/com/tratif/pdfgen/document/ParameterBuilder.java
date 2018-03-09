@@ -98,4 +98,14 @@ public class ParameterBuilder {
         params.put("--grayscale", "");
         return this;
     }
+
+    public ParameterBuilder disableSmartShrinking() {
+        params.put("--disable-smart-shrinking", "");
+        return this;
+    }
+
+    public ParameterBuilder enableSmartShrinking() {
+        params.put("--enable-smart-shrinking", "");
+        return this;
+    }
 }

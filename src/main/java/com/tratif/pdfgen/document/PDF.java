@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class PDF implements AutoCloseable {
@@ -41,6 +43,14 @@ public class PDF implements AutoCloseable {
 
     public void addPage(Page page) {
         pages.add(page);
+    }
+
+    public void addPages(Collection<Page> pages) {
+        this.pages.addAll(pages);
+    }
+
+    public void addPages(Page ...pages) {
+        this.pages.addAll(Arrays.asList(pages));
     }
 
     public void save(File file) {

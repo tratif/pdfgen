@@ -29,13 +29,14 @@ import java.util.Map;
 
 public class Document {
 
+    public final static String TEMP_FILE_PREFIX = "pdfgen";
+
     private static TemplateEngine TEMPLATE_ENGINE;
 
     static {
         TEMPLATE_ENGINE = new TemplateEngine();
         TEMPLATE_ENGINE.setTemplateResolver(new StringTemplateResolver());
     }
-
 
     public static DocumentBuilder fromStaticHtml(String html) {
         return new DocumentBuilder(html);

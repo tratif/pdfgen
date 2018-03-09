@@ -15,15 +15,24 @@
  */
 package com.tratif.pdfgen.document;
 
+import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PDF {
+public class PDF implements AutoCloseable {
+
+    private final static Logger log = LoggerFactory.getLogger(PDF.class);
+
     private List<Page> pages;
 
     public PDF() {
@@ -38,18 +47,41 @@ public class PDF {
         if(pages.size() <= 0)
             throw new IllegalStateException("Nothing to save.");
 
+        if(!file.toPath().getParent().toFile().exists())
+            throw new IllegalStateException("Given path does not exist.");
+
+        log.info("Indexing {} pages...", pages.size());
+
         PDFMergerUtility merger = new PDFMergerUtility();
-        PDDocument pdf;
-        try {
-            pdf = PDDocument.load(pages.get(0).toPdfByteArray());
-            for(int i = 1; i < pages.size(); i++) {
-                PDDocument toMerge = PDDocument.load(pages.get(i).toPdfByteArray());
-                merger.appendDocument(pdf, toMerge);
+        pages.forEach(page -> {
+            try {
+                merger.addSource(page.getContentFile());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException("Critical error: temp file was not found.", e);
             }
-            pdf.save(file.toString());
-            pdf.close();
+        });
+
+        log.info("Done.");
+        log.info("Rendering pages...");
+
+        pages.forEach(Page::render);
+
+        log.info("Done.");
+        log.info("Merging files...");
+
+        merger.setDestinationFileName(file.toString());
+        try {
+            merger.mergeDocuments(MemoryUsageSetting.setupTempFileOnly());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Critical error: failed to merge to final file.", e);
         }
+
+        log.info("Done.");
+        log.info("PDF was successfully created.");
+    }
+
+    @Override
+    public void close() {
+        pages.forEach(page -> page.getContentFile().delete());
     }
 }

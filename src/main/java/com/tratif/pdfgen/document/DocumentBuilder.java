@@ -28,7 +28,6 @@ import java.util.Map;
 public class DocumentBuilder {
 
     private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
-    private final String TEMP_FILE_PREFIX = "pdfgen";
 
     private String html;
     private Map<String, String> params;
@@ -42,14 +41,15 @@ public class DocumentBuilder {
         return new ParameterBuilder(params);
     }
 
-    void setParameters(Map<String, String> params) {
+    public DocumentBuilder setParameters(Map<String, String> params) {
         this.params = params;
+        return this;
     }
 
     public byte[] toPdf() {
         try {
-            File html = File.createTempFile(TEMP_FILE_PREFIX, ".html");
-            File pdf = File.createTempFile(TEMP_FILE_PREFIX, ".pdf");
+            File html = File.createTempFile(Document.TEMP_FILE_PREFIX, ".html");
+            File pdf = File.createTempFile(Document.TEMP_FILE_PREFIX, ".pdf");
             Files.write(html.toPath(), this.html.getBytes());
 
             CommandLineExecutor executor = new CommandLineExecutor();

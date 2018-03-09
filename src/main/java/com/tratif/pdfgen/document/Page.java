@@ -15,33 +15,57 @@
  */
 package com.tratif.pdfgen.document;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Page {
-    private String content;
+    private File contentFile;
     private Map<String, String> params;
 
     public Page() {
         this("");
     }
 
-    public Page(String content) {
-        this.content = content;
+    public Page(String contentFile) {
         params = new HashMap<>();
+        saveContentToTempFile(contentFile);
+    }
+
+    public Page(String htmlTemplate, Map<String, Object> bindMap) {
+        this(Document.fromHtmlTemplate(htmlTemplate, bindMap).toHtml());
+    }
+
+    private void saveContentToTempFile(String content) {
+        try {
+            this.contentFile = File.createTempFile(Document.TEMP_FILE_PREFIX, ".pdf");
+            Files.write(this.contentFile.toPath(), content.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("There was a problem saving file.", e);
+        }
+    }
+
+    public void render() {
+        try {
+            String content = new String(Files.readAllBytes(contentFile.toPath()));
+            Files.write(
+                    contentFile.toPath(),
+                    Document.fromStaticHtml(content)
+                            .setParameters(params)
+                            .toPdf()
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Critical error: temp file was not found.", e);
+        }
     }
 
     public ParameterBuilder parameters() {
         return new ParameterBuilder(params);
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public byte[] toPdfByteArray() {
-        DocumentBuilder db = Document.fromStaticHtml(content);
-        db.setParameters(params);
-        return db.toPdf();
+    public File getContentFile() {
+        return contentFile;
     }
 }

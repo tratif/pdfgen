@@ -17,15 +17,20 @@ package com.tratif.pdfgen.document;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static com.tratif.pdfgen.asserts.PdfAssert.*;
 
 public class PDFTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -44,5 +49,57 @@ public class PDFTest {
                 .contains("First")
                 .contains("page")
                 .contains("Second");
+    }
+
+    @Test
+    public void throwsIllegalStateExceptionWhenTryingToSaveZeroPages() {
+        PDF pdf = new PDF();
+
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("Nothing to save");
+
+        pdf.save(new File(""));
+    }
+
+    @Test
+    public void throwsIllegalStateExceptionWhenTryingToSaveToPathThatDoesntExist() {
+        PDF pdf = new PDF();
+        pdf.addPage(new Page("content"));
+
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("path does not exist");
+
+        pdf.save(new File("sdfsddhdf/sdfsghazhfg/agahaf/dsfss.pdf"));
+    }
+
+    @Test
+    public void savesSinglePageToPdfFile() throws IOException {
+        PDF pdf = new PDF();
+        pdf.addPage(new Page("content"));
+        Path filepath = Files.createTempFile("pdfgen", ".pdf");
+
+        pdf.save(filepath.toFile());
+
+        assertThat(Files.readAllBytes(filepath))
+                .isProperPdfFile()
+                .contains("content");
+    }
+
+    @Test
+    public void savesMultiplePagesToPdfFile() throws IOException {
+        PDF pdf = new PDF();
+        pdf.addPage(new Page("first"));
+        pdf.addPage(new Page("second"));
+        pdf.addPage(new Page("third"));
+        Path filepath = Files.createTempFile("pdfgen", ".pdf");
+
+        pdf.save(filepath.toFile());
+
+        assertThat(Files.readAllBytes(filepath))
+                .isProperPdfFile()
+                .hasPagesCount(3)
+                .contains("first")
+                .contains("second")
+                .contains("third");
     }
 }

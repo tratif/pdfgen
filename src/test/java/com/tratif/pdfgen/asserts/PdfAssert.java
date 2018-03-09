@@ -100,6 +100,19 @@ public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
         return this;
     }
 
+    public PdfAssert hasPagesCount(int count) {
+        isNotNull();
+
+        File file = writeActualToTempPdf();
+        try (PDFContentProvider provider = new PDFContentProvider(file)) {
+            Assertions.assertThat(provider.getPagesCount())
+                    .isEqualTo(count);
+        }
+
+        file.delete();
+        return this;
+    }
+
     public PdfAssert containsImage(BufferedImage img) {
         isNotNull();
 

@@ -100,6 +100,10 @@ public class PDFContentProvider implements Closeable {
         }
     }
 
+    public int getPagesCount() {
+        return document.getNumberOfPages();
+    }
+
     @Override
     public void close() {
         try {

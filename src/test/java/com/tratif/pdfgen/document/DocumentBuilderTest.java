@@ -38,17 +38,6 @@ public class DocumentBuilderTest {
     }
 
     @Test
-    public void engineBindsParameters() {
-        Map<String, Object> args = new HashMap<>();
-        args.put("param", new SimpleParameter("myContent"));
-
-        DocumentBuilder db = Document.fromHtmlTemplate("<span th:text=\"${param.content}\"></span>", args);
-
-        assertThatHtml(db.toHtml())
-                .contains("myContent");
-    }
-
-    @Test
     public void rendersTextProvidedAsTemplateParameter() {
         Map<String, Object> args = ImmutableMap.of("text", new SimpleParameter("World"));
         String html = "<h1>Hello <span th:text=\"${text.content}\"></span></h1>";

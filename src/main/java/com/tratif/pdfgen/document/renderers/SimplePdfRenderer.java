@@ -2,7 +2,7 @@ package com.tratif.pdfgen.document.renderers;
 
 import com.tratif.pdfgen.document.Document;
 import com.tratif.pdfgen.document.PDF;
-import com.tratif.pdfgen.document.Page;
+import com.tratif.pdfgen.document.builders.PageBuilder;
 import com.tratif.pdfgen.helpers.CommandLineExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,28 +19,34 @@ public class SimplePdfRenderer {
 
     }
 
-    public PDF render(Page page) {
+    public PDF render(PageBuilder page) {
         try {
             File html = File.createTempFile(Document.TEMP_FILE_PREFIX, ".html");
             File pdf = File.createTempFile(Document.TEMP_FILE_PREFIX, ".pdf");
-            Files.write(html.toPath(), page.getContent().getBytes());
+            Files.write(html.toPath(), page.build().getBytes());
 
             CommandLineExecutor executor = new CommandLineExecutor();
-            executor.command("wkhtmltopdf")
+            int exitCode = executor.command("wkhtmltopdf")
                     .withArgument("--encoding utf-8")
-                    .withArguments(page.getParams())
+                    .withArguments(page.getParams().build())
                     .withArgument(html.toPath().toString())
                     .withArgument(pdf.toPath().toString())
                     .execute()
                     .waitFor();
 
+            if (exitCode != 0) {
+                throw new RuntimeException("wkhtmltopdf was terminated with exit code " + exitCode);
+            }
+
             byte[] bytes = Files.readAllBytes(pdf.toPath());
 
-            if (!html.delete())
-                log.warn("{} was not deleted.", html.getPath());
+            if (!html.delete()) {
+                log.debug("{} was not deleted.", html.getPath());
+            }
 
-            if (!pdf.delete())
-                log.warn("{} was not deleted.", pdf.getPath());
+            if (!pdf.delete()) {
+                log.debug("{} was not deleted.", pdf.getPath());
+            }
 
             return new PDF(bytes);
 

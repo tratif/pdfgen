@@ -16,7 +16,6 @@
 package com.tratif.pdfgen.document;
 
 import com.google.common.collect.ImmutableMap;
-import com.tratif.pdfgen.asserts.PdfAssert;
 import com.tratif.pdfgen.asserts.helpers.SimpleParameter;
 import org.junit.Test;
 
@@ -26,14 +25,14 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
 
 public class DocumentTest {
 
     @Test
     public void pdfHasProperContentFromString() {
         String html = "<h1>Hello world</h1>";
-        PdfAssert.assertThat(Document.fromStaticHtml(html).toPdf())
+        assertThat(Document.fromStaticHtml(html).toPdf())
                 .contains("Hello")
                 .contains("world");
     }
@@ -41,7 +40,7 @@ public class DocumentTest {
     @Test
     public void pdfHasProperContentFromInputStream() {
         InputStream inputStream = new ByteArrayInputStream("<h1>Hello world</h1>".getBytes());
-        PdfAssert.assertThat(Document.fromStaticHtml(inputStream).toPdf())
+        assertThat(Document.fromStaticHtml(inputStream).toPdf())
                 .contains("Hello")
                 .contains("world");
     }
@@ -49,7 +48,7 @@ public class DocumentTest {
     @Test
     public void pdfHasProperContentFromReader() {
         Reader reader = new StringReader("<h1>Hello world</h1>");
-        PdfAssert.assertThat(Document.fromStaticHtml(reader).toPdf())
+        assertThat(Document.fromStaticHtml(reader).toPdf())
                 .contains("Hello")
                 .contains("world");
     }
@@ -59,7 +58,8 @@ public class DocumentTest {
         Map<String, Object> args = ImmutableMap.of("text", new SimpleParameter("myContent"));
         String htmlTemplate = "<h1>First page</h1><p th:text=\"${text.content}\"></p>";
 
-        assertThat(Document.fromHtmlTemplate(htmlTemplate, args))
-                .isEqualTo("<h1>First page</h1><p>myContent</p>");
+        assertThat(Document.fromHtmlTemplate(htmlTemplate, args).toPdf())
+                .isProperPdfFile()
+                .contains("myContent");
     }
 }

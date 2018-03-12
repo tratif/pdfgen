@@ -15,15 +15,16 @@
  */
 package com.tratif.pdfgen.document.builders;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ParameterBuilder {
     private PageBuilder pageBuilder;
     private Map<String, String> params;
 
-    ParameterBuilder(PageBuilder pageBuilder, Map<String, String> params) {
+    ParameterBuilder(PageBuilder pageBuilder) {
         this.pageBuilder = pageBuilder;
-        this.params = params;
+        this.params = new HashMap<>();
     }
 
     public ParameterBuilder landscape() {
@@ -113,5 +114,13 @@ public class ParameterBuilder {
 
     public PageBuilder and() {
         return pageBuilder;
+    }
+
+    public Map<String, String> build() {
+        return params;
+    }
+
+    public byte[] toPdf() {
+        return pageBuilder.toPdf();
     }
 }

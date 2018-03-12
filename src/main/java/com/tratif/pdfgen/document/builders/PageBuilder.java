@@ -1,6 +1,5 @@
 package com.tratif.pdfgen.document.builders;
 
-import com.tratif.pdfgen.document.Page;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
@@ -17,15 +16,17 @@ public class PageBuilder {
     }
 
     private DocumentBuilder documentBuilder;
-    private Page page;
 
-    public PageBuilder(DocumentBuilder documentBuilder, Page page) {
+    private String content;
+    private ParameterBuilder params;
+
+    public PageBuilder(DocumentBuilder documentBuilder) {
         this.documentBuilder = documentBuilder;
-        this.page = page;
+        params = new ParameterBuilder(this);
     }
 
     public PageBuilder fromStaticHtml(String html) {
-        page.setContent(html);
+        content = html;
         return this;
     }
 
@@ -35,15 +36,27 @@ public class PageBuilder {
         context.setVariables(params);
         TEMPLATE_ENGINE.process(htmlTemplate, context, sw);
 
-        page.setContent(sw.toString());
+        content = sw.toString();
         return this;
     }
 
     public ParameterBuilder withParameters() {
-        return new ParameterBuilder(this, page.getParams());
+        return new ParameterBuilder(this);
     }
 
     public DocumentBuilder and() {
         return documentBuilder;
+    }
+
+    public ParameterBuilder getParams() {
+        return params;
+    }
+
+    public String build() {
+        return content;
+    }
+
+    public byte[] toPdf() {
+        return documentBuilder.toPdf();
     }
 }

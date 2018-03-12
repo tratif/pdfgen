@@ -15,38 +15,33 @@
  */
 package com.tratif.pdfgen.document.builders;
 
-import com.tratif.pdfgen.document.Page;
 import com.tratif.pdfgen.document.renderers.SimplePdfRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.StringTemplateResolver;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class DocumentBuilder {
 
     private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
 
-    private List<Page> pages;
-    private Page currentPage;
+    private List<PageBuilder> pages;
 
     public DocumentBuilder() {
         pages = new ArrayList<>();
     }
 
-    public DocumentBuilder(String html) {
-        this();
-        setCurrentPage(new Page(html));
-    }
+//    public DocumentBuilder(String html) {
+//        this();
+//        PageBuilder
+//        pages.add(new PageBuilder(this))
+//    }
 
     public PageBuilder withPage() {
-        setCurrentPage(new Page());
-        return new PageBuilder(this, currentPage);
+        PageBuilder pageBuilder = new PageBuilder(this);
+        pages.add(pageBuilder);
+        return pageBuilder;
     }
 
     public byte[] toPdf() {
@@ -54,10 +49,5 @@ public class DocumentBuilder {
             throw new IllegalStateException("Nothing to render");
 
         return new SimplePdfRenderer().render(pages.get(0)).toByteArray();
-    }
-
-    private void setCurrentPage(Page currentPage) {
-        this.currentPage = currentPage;
-        pages.add(currentPage);
     }
 }

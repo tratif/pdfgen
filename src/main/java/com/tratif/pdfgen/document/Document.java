@@ -30,27 +30,29 @@ public class Document {
 
     public final static String TEMP_FILE_PREFIX = "pdfgen";
 
-    public static DocumentBuilder fromStaticHtml(String html) {
-        return new DocumentBuilder(html);
+    public static PageBuilder fromStaticHtml(String html) {
+        return new DocumentBuilder()
+                .withPage()
+                    .fromStaticHtml(html);
     }
 
-    public static DocumentBuilder fromStaticHtml(InputStream inputStream) {
+    public static PageBuilder fromStaticHtml(InputStream inputStream) {
         return fromStaticHtml(ToStringParser.parse(inputStream));
     }
 
-    public static DocumentBuilder fromStaticHtml(Reader reader) {
+    public static PageBuilder fromStaticHtml(Reader reader) {
         return fromStaticHtml(ToStringParser.parse(reader));
     }
 
-    public static DocumentBuilder fromStaticHtml(URL url) {
+    public static PageBuilder fromStaticHtml(URL url) {
         return fromStaticHtml(ToStringParser.parse(url));
     }
 
-    public static DocumentBuilder fromStaticHtml(File file) {
+    public static PageBuilder fromStaticHtml(File file) {
         return fromStaticHtml(ToStringParser.parse(file));
     }
 
-    public static DocumentBuilder fromStaticHtml(Path path) {
+    public static PageBuilder fromStaticHtml(Path path) {
         return fromStaticHtml(ToStringParser.parse(path));
     }
 

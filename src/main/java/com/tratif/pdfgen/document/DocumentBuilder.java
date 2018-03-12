@@ -1,3 +1,18 @@
+/**
+ * Copyright 2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.tratif.pdfgen.document;
 
 import com.tratif.pdfgen.helpers.CommandLineExecutor;
@@ -13,32 +28,36 @@ import java.util.Map;
 public class DocumentBuilder {
 
     private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
-    private final String TEMP_FILE_PREFIX = "pdfgen";
 
     private String html;
-    private Map<String, String> properties;
+    private Map<String, String> params;
 
     DocumentBuilder(String html) {
         this.html = html;
-        properties = new HashMap<>();
+        params = new HashMap<>();
     }
 
-    public PropertiesBuilder properties() {
-        return new PropertiesBuilder(properties);
+    public ParameterBuilder parameters() {
+        return new ParameterBuilder(params);
+    }
+
+    public DocumentBuilder setParameters(Map<String, String> params) {
+        this.params = params;
+        return this;
     }
 
     public byte[] toPdf() {
         try {
-            File html = File.createTempFile(TEMP_FILE_PREFIX, ".html");
-            File pdf = File.createTempFile(TEMP_FILE_PREFIX, ".pdf");
+            File html = File.createTempFile(Document.TEMP_FILE_PREFIX, ".html");
+            File pdf = File.createTempFile(Document.TEMP_FILE_PREFIX, ".pdf");
             Files.write(html.toPath(), this.html.getBytes());
 
             CommandLineExecutor executor = new CommandLineExecutor();
             executor.command("wkhtmltopdf")
                     .withArgument("--encoding utf-8")
+                    .withArguments(params)
                     .withArgument(html.toPath().toString())
                     .withArgument(pdf.toPath().toString())
-                    .withArguments(properties)
                     .execute()
                     .waitFor();
 

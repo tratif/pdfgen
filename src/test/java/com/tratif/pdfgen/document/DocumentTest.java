@@ -59,7 +59,7 @@ public class DocumentTest {
         Map<String, Object> args = ImmutableMap.of("text", new SimpleParameter("myContent"));
         String htmlTemplate = "<h1>First page</h1><p th:text=\"${text.content}\"></p>";
 
-        assertThat(Document.fromHtmlTemplate(htmlTemplate, args).toHtml())
+        assertThat(Document.fromHtmlTemplate(htmlTemplate, args))
                 .isEqualTo("<h1>First page</h1><p>myContent</p>");
     }
 }

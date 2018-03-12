@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 
 import static com.tratif.pdfgen.asserts.PdfAssert.*;
 
@@ -101,5 +102,25 @@ public class PDFTest {
                 .contains("first")
                 .contains("second")
                 .contains("third");
+    }
+
+    //fluent builder
+    public void ___() {
+        Document.withPage()
+                    .fromStaticHtml("<p>Hello world</p>")
+                    .and()
+                .withPage()
+                    .fromHtmlTemplate("Template", new HashMap<>())
+                    .withParameters()
+                        .zoom(1.33)
+                        .noBackground()
+                    .and()
+                .toPdf();
+
+        Document.fromStaticHtml("123")
+                .toPdf();
+
+        Document.withPage()
+                    .fromStaticHtml("123");
     }
 }

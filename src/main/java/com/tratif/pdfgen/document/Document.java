@@ -15,14 +15,12 @@
  */
 package com.tratif.pdfgen.document;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.StringTemplateResolver;
+import com.tratif.pdfgen.document.builders.DocumentBuilder;
+import com.tratif.pdfgen.document.builders.ToStringParser;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
@@ -30,13 +28,6 @@ import java.util.Map;
 public class Document {
 
     public final static String TEMP_FILE_PREFIX = "pdfgen";
-
-    private static TemplateEngine TEMPLATE_ENGINE;
-
-    static {
-        TEMPLATE_ENGINE = new TemplateEngine();
-        TEMPLATE_ENGINE.setTemplateResolver(new StringTemplateResolver());
-    }
 
     public static DocumentBuilder fromStaticHtml(String html) {
         return new DocumentBuilder(html);
@@ -62,13 +53,11 @@ public class Document {
         return fromStaticHtml(ToStringParser.parse(path));
     }
 
-    public static DocumentBuilder fromHtmlTemplate(String html, Map<String, Object> args) {
-        StringWriter sw = new StringWriter();
-        Context context = new Context();
-        context.setVariables(args);
-        TEMPLATE_ENGINE.process(html, context, sw);
-
-        return new DocumentBuilder(sw.toString());
+    public static DocumentBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
+        return new DocumentBuilder()
+                .withPage()
+                    .fromHtmlTemplate(htmlTemplate, params)
+                    .and();
     }
 
     public static DocumentBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> args) {
@@ -89,5 +78,9 @@ public class Document {
 
     public static DocumentBuilder fromHtmlTemplate(Path path, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(path), args);
+    }
+
+    public static DocumentBuilder withPage() {
+        return new DocumentBuilder();
     }
 }

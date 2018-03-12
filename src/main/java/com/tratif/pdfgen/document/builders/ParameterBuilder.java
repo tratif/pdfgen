@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document;
+package com.tratif.pdfgen.document.builders;
 
 import java.util.Map;
 
 public class ParameterBuilder {
+    private PageBuilder pageBuilder;
     private Map<String, String> params;
 
-    ParameterBuilder(Map<String, String> params) {
+    ParameterBuilder(PageBuilder pageBuilder, Map<String, String> params) {
+        this.pageBuilder = pageBuilder;
         this.params = params;
     }
 
@@ -107,5 +109,9 @@ public class ParameterBuilder {
     public ParameterBuilder enableSmartShrinking() {
         params.put("--enable-smart-shrinking", "");
         return this;
+    }
+
+    public PageBuilder and() {
+        return pageBuilder;
     }
 }

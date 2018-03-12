@@ -114,6 +114,7 @@ public class PDFTest {
                     .withParameters()
                         .zoom(1.33)
                         .noBackground()
+                        .and()
                     .and()
                 .toPdf();
 
@@ -121,6 +122,7 @@ public class PDFTest {
                 .toPdf();
 
         Document.withPage()
-                    .fromStaticHtml("123");
+                    .fromStaticHtml("123")
+                .and().toPdf();
     }
 }

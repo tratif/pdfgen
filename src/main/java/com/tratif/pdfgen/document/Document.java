@@ -16,6 +16,7 @@
 package com.tratif.pdfgen.document;
 
 import com.tratif.pdfgen.document.builders.DocumentBuilder;
+import com.tratif.pdfgen.document.builders.PageBuilder;
 import com.tratif.pdfgen.document.builders.ToStringParser;
 
 import java.io.File;
@@ -80,7 +81,7 @@ public class Document {
         return fromHtmlTemplate(ToStringParser.parse(path), args);
     }
 
-    public static DocumentBuilder withPage() {
-        return new DocumentBuilder();
+    public static PageBuilder withPage() {
+        return new DocumentBuilder().withPage();
     }
 }

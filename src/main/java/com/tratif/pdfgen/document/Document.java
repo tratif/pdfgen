@@ -56,30 +56,29 @@ public class Document {
         return fromStaticHtml(ToStringParser.parse(path));
     }
 
-    public static DocumentBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
+    public static PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
         return new DocumentBuilder()
                 .withPage()
-                    .fromHtmlTemplate(htmlTemplate, params)
-                    .and();
+                    .fromHtmlTemplate(htmlTemplate, params);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(inputStream), args);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(Reader reader, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(Reader reader, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(reader), args);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(URL url, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(URL url, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(url), args);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(File file, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(File file, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(file), args);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(Path path, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(Path path, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(path), args);
     }
 

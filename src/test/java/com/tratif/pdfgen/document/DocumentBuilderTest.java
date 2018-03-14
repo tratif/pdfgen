@@ -15,8 +15,6 @@
  */
 package com.tratif.pdfgen.document;
 
-import org.assertj.core.api.AbstractCharSequenceAssert;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
@@ -46,7 +44,44 @@ public class DocumentBuilderTest {
                 .contains("page");
     }
 
-    private AbstractCharSequenceAssert<?, String> assertThatHtml(String html) {
-        return Assertions.assertThat(html);
+    @Test
+    public void rendersPdfWithMultiplePages() {
+        byte[] pdf = Document.withPage()
+                                .fromStaticHtml("<h1>Title</h1>")
+                                .and()
+                             .withPage()
+                                .fromStaticHtml("<p>Second page</p>")
+                            .and().toPdf();
+
+        assertThat(pdf)
+                .hasPagesCount(2)
+                .contains("Title")
+                .contains("Second")
+                .contains("page");
+    }
+
+    @Test
+    public void rendersPdfWithMultiplePagesAndParameters() {
+        byte[] pdf = Document.withPage()
+                    .fromStaticHtml("<h1>Title</h1>")
+                    .withParameters()
+                        .noBackground()
+                        .a4()
+                        .and()
+                    .and()
+                .withPage()
+                    .fromStaticHtml("<p>Second page</p>")
+                    .withParameters()
+                        .noBackground()
+                        .disableSmartShrinking()
+                        .and()
+                    .and()
+                .toPdf();
+
+        assertThat(pdf)
+                .hasPagesCount(2)
+                .contains("Title")
+                .contains("Second")
+                .contains("page");
     }
 }

@@ -10,13 +10,18 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class SimplePdfRenderer {
 
     private static final Logger log = LoggerFactory.getLogger(SimplePdfRenderer.class);
 
-    public SimplePdfRenderer() {
-
+    public List<PDF> render(List<PageBuilder> pages) {
+        return pages.stream()
+                .map(this::render)
+                .collect(toList());
     }
 
     public PDF render(PageBuilder page) {

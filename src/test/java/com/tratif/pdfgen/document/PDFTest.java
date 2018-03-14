@@ -16,17 +16,8 @@
 package com.tratif.pdfgen.document;
 
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-
-import static com.tratif.pdfgen.asserts.PdfAssert.*;
 
 public class PDFTest {
 
@@ -35,25 +26,4 @@ public class PDFTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-    public void ___() {
-        Document.withPage()
-                    .fromStaticHtml("<p>Hello world</p>")
-                    .and()
-                .withPage()
-                    .fromHtmlTemplate("Template", new HashMap<>())
-                    .withParameters()
-                        .zoom(1.33)
-                        .noBackground()
-                        .and()
-                    .and()
-                .toPdf();
-
-        Document.fromStaticHtml("123")
-                .toPdf();
-
-        Document.withPage()
-                    .fromStaticHtml("123")
-                .and().toPdf();
-    }
 }

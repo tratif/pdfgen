@@ -11,26 +11,15 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
-public class SimplePdfRenderer {
+public class SimplePdfRenderer implements PdfRenderer {
 
     private static final Logger log = LoggerFactory.getLogger(SimplePdfRenderer.class);
-
-    public List<PDF> render(List<PageBuilder> pages) {
-        return pages.stream()
-                .map(this::render)
-                .collect(toList());
-    }
 
     public PDF render(PageBuilder page) {
         try {
             File html = File.createTempFile(Document.TEMP_FILE_PREFIX, ".html");
             File pdf = File.createTempFile(Document.TEMP_FILE_PREFIX, ".pdf");
-//            Files.write(html.toPath(), page.getContent());
-//            Files.write(html.toPath(), new ByteArrayInputStream(page.getContent()).)
             FileUtils.copyToFile(page.getContent(), html);
 
             CommandLineExecutor executor = new CommandLineExecutor();

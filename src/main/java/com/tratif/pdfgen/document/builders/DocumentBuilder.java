@@ -16,6 +16,8 @@
 package com.tratif.pdfgen.document.builders;
 
 import com.tratif.pdfgen.document.PDF;
+import com.tratif.pdfgen.document.renderers.PdfMerger;
+import com.tratif.pdfgen.document.renderers.PdfRenderer;
 import com.tratif.pdfgen.document.renderers.SimplePdfMerger;
 import com.tratif.pdfgen.document.renderers.SimplePdfRenderer;
 import org.apache.pdfbox.io.MemoryUsageSetting;
@@ -30,6 +32,8 @@ public class DocumentBuilder {
     private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
 
     private List<PageBuilder> pages;
+    private PdfMerger merger = new SimplePdfMerger();
+    private PdfRenderer renderer = new SimplePdfRenderer();
 
     public DocumentBuilder() {
         pages = new ArrayList<>();
@@ -45,12 +49,11 @@ public class DocumentBuilder {
         if (pages.size() <= 0)
             throw new IllegalStateException("Nothing to render");
 
-        List<PDF> pdfs = new SimplePdfRenderer().render(pages);
+        List<PDF> pdfs = renderer.render(pages);
         if (pdfs.size() == 1) {
             return pdfs.get(0).toByteArray();
         }
 
-        SimplePdfMerger merger = new SimplePdfMerger();
         return merger.merge(pdfs, MemoryUsageSetting.setupMainMemoryOnly(1024 * 1024 * 128));
     }
 }

@@ -1,9 +1,12 @@
 package com.tratif.pdfgen.document.builders;
 
+import com.tratif.pdfgen.document.providers.ContentProvider;
+import com.tratif.pdfgen.document.providers.StringContentProvider;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Map;
 
@@ -16,28 +19,13 @@ public class PageBuilder {
     }
 
     private DocumentBuilder documentBuilder;
-
-    private String content;
     private ParameterBuilder params;
+
+    private ContentProvider contentProvider;
 
     public PageBuilder(DocumentBuilder documentBuilder) {
         this.documentBuilder = documentBuilder;
         params = new ParameterBuilder(this);
-    }
-
-    public PageBuilder fromStaticHtml(String html) {
-        content = html;
-        return this;
-    }
-
-    public PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
-        StringWriter sw = new StringWriter();
-        Context context = new Context();
-        context.setVariables(params);
-        TEMPLATE_ENGINE.process(htmlTemplate, context, sw);
-
-        content = sw.toString();
-        return this;
     }
 
     public ParameterBuilder withParameters() {
@@ -48,15 +36,30 @@ public class PageBuilder {
         return documentBuilder;
     }
 
-    public ParameterBuilder getParams() {
-        return params;
+    public Map<String, String> getParams() {
+        return params.build();
     }
 
-    public String build() {
-        return content;
+    public InputStream getContent() {
+        return contentProvider.getContent();
     }
 
     public byte[] toPdf() {
         return documentBuilder.toPdf();
+    }
+
+    public PageBuilder fromStaticHtml(String html) {
+        contentProvider = new StringContentProvider(html);
+        return this;
+    }
+
+    public PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
+        StringWriter sw = new StringWriter();
+        Context context = new Context();
+        context.setVariables(params);
+        TEMPLATE_ENGINE.process(htmlTemplate, context, sw);
+
+        contentProvider = new StringContentProvider(sw.toString());
+        return this;
     }
 }

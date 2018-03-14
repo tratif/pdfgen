@@ -4,6 +4,7 @@ import com.tratif.pdfgen.document.Document;
 import com.tratif.pdfgen.document.PDF;
 import com.tratif.pdfgen.document.builders.PageBuilder;
 import com.tratif.pdfgen.helpers.CommandLineExecutor;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,12 +29,14 @@ public class SimplePdfRenderer {
         try {
             File html = File.createTempFile(Document.TEMP_FILE_PREFIX, ".html");
             File pdf = File.createTempFile(Document.TEMP_FILE_PREFIX, ".pdf");
-            Files.write(html.toPath(), page.build().getBytes());
+//            Files.write(html.toPath(), page.getContent());
+//            Files.write(html.toPath(), new ByteArrayInputStream(page.getContent()).)
+            FileUtils.copyToFile(page.getContent(), html);
 
             CommandLineExecutor executor = new CommandLineExecutor();
             int exitCode = executor.command("wkhtmltopdf")
                     .withArgument("--encoding utf-8")
-                    .withArguments(page.getParams().build())
+                    .withArguments(page.getParams())
                     .withArgument(html.toPath().toString())
                     .withArgument(pdf.toPath().toString())
                     .execute()

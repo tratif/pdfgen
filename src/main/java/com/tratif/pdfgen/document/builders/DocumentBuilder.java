@@ -18,8 +18,8 @@ package com.tratif.pdfgen.document.builders;
 import com.tratif.pdfgen.document.PDF;
 import com.tratif.pdfgen.document.renderers.PdfMerger;
 import com.tratif.pdfgen.document.renderers.PdfRenderer;
-import com.tratif.pdfgen.document.renderers.SimplePdfMerger;
-import com.tratif.pdfgen.document.renderers.SimplePdfRenderer;
+import com.tratif.pdfgen.document.renderers.InputStreamPdfMerger;
+import com.tratif.pdfgen.document.renderers.InputStreamPdfRenderer;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +32,8 @@ public class DocumentBuilder {
     private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
 
     private List<PageBuilder> pages;
-    private PdfMerger merger = new SimplePdfMerger();
-    private PdfRenderer renderer = new SimplePdfRenderer();
+    private PdfMerger merger = new InputStreamPdfMerger();
+    private PdfRenderer renderer = new InputStreamPdfRenderer();
 
     public DocumentBuilder() {
         pages = new ArrayList<>();

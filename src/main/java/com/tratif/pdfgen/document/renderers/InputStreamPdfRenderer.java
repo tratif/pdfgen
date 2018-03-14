@@ -12,9 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class SimplePdfRenderer implements PdfRenderer {
+public class InputStreamPdfRenderer implements PdfRenderer {
 
-    private static final Logger log = LoggerFactory.getLogger(SimplePdfRenderer.class);
+    private static final Logger log = LoggerFactory.getLogger(InputStreamPdfRenderer.class);
 
     public PDF render(PageBuilder page) {
         try {

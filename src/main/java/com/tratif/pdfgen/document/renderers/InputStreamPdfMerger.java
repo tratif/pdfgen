@@ -7,7 +7,7 @@ import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import java.io.*;
 import java.util.List;
 
-public class SimplePdfMerger implements PdfMerger {
+public class InputStreamPdfMerger implements PdfMerger {
 
     public PDF merge(List<PDF> pdfs, MemoryUsageSetting memoryUsageSetting) {
         PDFMergerUtility merger = new PDFMergerUtility();

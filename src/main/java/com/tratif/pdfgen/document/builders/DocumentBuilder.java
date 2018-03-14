@@ -46,12 +46,16 @@ public class DocumentBuilder {
     }
 
     public byte[] toPdf() {
+        return toPdfObject().toByteArray();
+    }
+
+    public PDF toPdfObject() {
         if (pages.size() <= 0)
             throw new IllegalStateException("Nothing to render");
 
         List<PDF> pdfs = renderer.render(pages);
         if (pdfs.size() == 1) {
-            return pdfs.get(0).toByteArray();
+            return pdfs.get(0);
         }
 
         return merger.merge(pdfs, MemoryUsageSetting.setupMainMemoryOnly(1024 * 1024 * 128));

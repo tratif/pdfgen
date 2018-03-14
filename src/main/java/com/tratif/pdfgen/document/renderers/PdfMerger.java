@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PdfMerger {
 
-    byte[] merge(List<PDF> pdfs, MemoryUsageSetting memoryUsageSetting);
+    PDF merge(List<PDF> pdfs, MemoryUsageSetting memoryUsageSetting);
 }

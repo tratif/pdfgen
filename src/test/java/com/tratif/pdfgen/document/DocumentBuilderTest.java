@@ -80,6 +80,7 @@ public class DocumentBuilderTest {
                 .toPdf();
 
         assertThat(pdf)
+                .isProperPdfFile()
                 .hasPagesCount(2)
                 .contains("Title")
                 .contains("Second")

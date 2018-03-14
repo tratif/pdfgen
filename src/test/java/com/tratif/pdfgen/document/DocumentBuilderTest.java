@@ -17,13 +17,19 @@ package com.tratif.pdfgen.document;
 
 import com.google.common.collect.ImmutableMap;
 import com.tratif.pdfgen.asserts.helpers.SimpleParameter;
+import com.tratif.pdfgen.document.builders.DocumentBuilder;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
 import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
 
 public class DocumentBuilderTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void generatesProperPdfFile() {
@@ -147,5 +153,13 @@ public class DocumentBuilderTest {
                 .hasPagesCount(2)
                 .contains("testContent")
                 .contains("testContent2");
+    }
+
+    @Test
+    public void whenNoPagesToRenderThenIllegalStateException() {
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("Nothing to render");
+
+        new DocumentBuilder().toPdf();
     }
 }

@@ -29,6 +29,10 @@ public class PDF {
     }
 
     public void toFile(File destination) {
+        if (!destination.getParentFile().exists()) {
+            throw new RuntimeException("Following path does not exist: " + destination.getParentFile().toString());
+        }
+
         try {
             FileUtils.copyToFile(content, destination);
         } catch (IOException e) {

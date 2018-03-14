@@ -47,11 +47,12 @@ public class DocumentBuilderTest {
     @Test
     public void rendersPdfWithMultiplePages() {
         byte[] pdf = Document.withPage()
-                                .fromStaticHtml("<h1>Title</h1>")
-                                .and()
-                             .withPage()
-                                .fromStaticHtml("<p>Second page</p>")
-                            .and().toPdf();
+                    .fromStaticHtml("<h1>Title</h1>")
+                    .and()
+                .withPage()
+                    .fromStaticHtml("<p>Second page</p>")
+                    .and()
+                .toPdf();
 
         assertThat(pdf)
                 .hasPagesCount(2)

@@ -141,7 +141,7 @@ public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
             file = File.createTempFile(TEMP_FILE_PREFIX, ".pdf");
             Files.write(file.toPath(), actual);
         } catch(IOException e) {
-            throw new RuntimeException("Failed to create temp file or write to it.", e);
+            throw new RuntimeException("Failed to withPage temp file or write to it.", e);
         }
 
         return file;

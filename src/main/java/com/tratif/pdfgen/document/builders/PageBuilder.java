@@ -42,7 +42,7 @@ public class PageBuilder {
     }
 
     public PageBuilder withPage() {
-        return new DocumentBuilder().withPage();
+        return documentBuilder.withPage();
     }
 
     public Map<String, String> getParams() {

@@ -9,7 +9,9 @@ import java.util.List;
 
 public class InputStreamPdfMerger implements PdfMerger {
 
-    public PDF merge(List<PDF> pdfs, MemoryUsageSetting memoryUsageSetting) {
+    private static final MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMainMemoryOnly(1024 * 1024 * 128);
+
+    public PDF merge(List<PDF> pdfs) {
         PDFMergerUtility merger = new PDFMergerUtility();
         pdfs.forEach(pdf -> merger.addSource(new BufferedInputStream(pdf.toInputStream())));
         try {

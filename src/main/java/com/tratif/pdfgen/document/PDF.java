@@ -1,5 +1,6 @@
 package com.tratif.pdfgen.document;
 
+import com.tratif.pdfgen.helpers.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -29,12 +30,13 @@ public class PDF {
     }
 
     public void toFile(File destination) {
-        if (!destination.getParentFile().exists()) {
+        if (destination.getParentFile() != null && !destination.getParentFile().exists()) {
             throw new RuntimeException("Following path does not exist: " + destination.getParentFile().toString());
         }
 
         try {
-            FileUtils.copyToFile(content, destination);
+            Utils.writeStreamToFile(destination, content);
+//            FileUtils.copyToFile(content, destination);
         } catch (IOException e) {
             throw new RuntimeException("Failed saving to file.", e);
         }

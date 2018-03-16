@@ -7,6 +7,7 @@ import com.tratif.pdfgen.document.providers.StringContentProvider;
 import org.apache.commons.io.IOUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.io.*;
@@ -87,7 +88,6 @@ public class PageBuilder {
         return this;
     }
 
-    //TODO: templates from InputStream
     public PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> params) {
         StringWriter sw = new StringWriter();
         Context context = new Context();

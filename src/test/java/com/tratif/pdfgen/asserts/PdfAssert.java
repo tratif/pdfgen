@@ -58,7 +58,7 @@ public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
         Assertions.assertThat(actual[3]).isEqualTo((byte) 0x46); // F
         Assertions.assertThat(actual[4]).isEqualTo((byte) 0x2D); // -
 
-        if(actual[5] == (byte) 0x31 && actual[6] == (byte) 0x2E && actual[7] == (byte) 0x33) // version is 1.3 ?
+        if (actual[5] == (byte) 0x31 && actual[6] == (byte) 0x2E && actual[7] == (byte) 0x33) // version is 1.3 ?
         {
             // file terminator
             Assertions.assertThat(actual[actual.length - 7]).isEqualTo((byte) 0x25); // %
@@ -71,7 +71,7 @@ public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
             return this;
         }
 
-        if(actual[5] == (byte) 0x31 && actual[6] == (byte) 0x2E && actual[7] == (byte) 0x34) // version is 1.4 ?
+        if (actual[5] == (byte) 0x31 && actual[6] == (byte) 0x2E && actual[7] == (byte) 0x34) // version is 1.4 ?
         {
             // file terminator
             Assertions.assertThat(actual[actual.length - 6]).isEqualTo((byte) 0x25); // %
@@ -141,7 +141,7 @@ public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
             file = File.createTempFile(TEMP_FILE_PREFIX, ".pdf");
             Files.write(file.toPath(), actual);
         } catch(IOException e) {
-            throw new RuntimeException("Failed to create temp file or write to it.", e);
+            throw new RuntimeException("Failed to withPage temp file or write to it.", e);
         }
 
         return file;

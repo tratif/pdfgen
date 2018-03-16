@@ -16,9 +16,10 @@
 package com.tratif.pdfgen.document.builders;
 
 import com.tratif.pdfgen.document.PDF;
-import com.tratif.pdfgen.document.renderers.SimplePdfMerger;
-import com.tratif.pdfgen.document.renderers.SimplePdfRenderer;
-import org.apache.pdfbox.io.MemoryUsageSetting;
+import com.tratif.pdfgen.document.renderers.PdfMerger;
+import com.tratif.pdfgen.document.renderers.PdfRenderer;
+import com.tratif.pdfgen.document.renderers.InputStreamPdfMerger;
+import com.tratif.pdfgen.document.renderers.InputStreamPdfRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,8 @@ public class DocumentBuilder {
     private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
 
     private List<PageBuilder> pages;
+    private PdfMerger merger = new InputStreamPdfMerger();
+    private PdfRenderer renderer = new InputStreamPdfRenderer();
 
     public DocumentBuilder() {
         pages = new ArrayList<>();
@@ -42,15 +45,18 @@ public class DocumentBuilder {
     }
 
     public byte[] toPdf() {
+        return toPdfObject().toByteArray();
+    }
+
+    public PDF toPdfObject() {
         if (pages.isEmpty())
             throw new IllegalStateException("Nothing to render");
 
-        List<PDF> pdfs = new SimplePdfRenderer().render(pages);
+        List<PDF> pdfs = renderer.render(pages);
         if (pdfs.size() == 1) {
-            return pdfs.get(0).toByteArray();
+            return pdfs.get(0);
         }
 
-        SimplePdfMerger merger = new SimplePdfMerger();
         return merger.merge(pdfs);
     }
 }

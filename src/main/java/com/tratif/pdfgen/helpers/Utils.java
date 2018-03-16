@@ -13,11 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.renderers;
+package com.tratif.pdfgen.helpers;
 
-import java.util.Map;
+import java.io.*;
 
-public interface HtmlRenderer {
+public class Utils {
 
-    String render(String htmlTemplate, Map<String, Object> params);
+    public static void writeStreamToFile(File file, InputStream inputStream) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            int b;
+            int i = 1;
+            while((b = inputStream.read()) != -1) {
+                fos.write(b);
+
+                if (i % 1000 == 0) {
+                    fos.flush();
+                }
+
+                i++;
+            }
+        }
+    }
 }

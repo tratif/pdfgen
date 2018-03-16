@@ -13,11 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.renderers;
+package com.tratif.pdfgen.document.providers;
 
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
-public interface HtmlRenderer {
+public class StringContentProvider implements ContentProvider {
 
-    String render(String htmlTemplate, Map<String, Object> params);
+    private String content;
+
+    public StringContentProvider(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public InputStream getContent() {
+        return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+    }
 }

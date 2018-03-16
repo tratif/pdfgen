@@ -15,9 +15,12 @@
  */
 package com.tratif.pdfgen.document.renderers;
 
-import java.util.Map;
+import com.tratif.pdfgen.document.PDF;
+import org.apache.pdfbox.io.MemoryUsageSetting;
 
-public interface HtmlRenderer {
+import java.util.List;
 
-    String render(String htmlTemplate, Map<String, Object> params);
+public interface PdfMerger {
+
+    PDF merge(List<PDF> pdfs);
 }

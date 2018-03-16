@@ -15,14 +15,13 @@
  */
 package com.tratif.pdfgen.document;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.StringTemplateResolver;
+import com.tratif.pdfgen.document.builders.DocumentBuilder;
+import com.tratif.pdfgen.document.builders.PageBuilder;
+import com.tratif.pdfgen.document.builders.ToStringParser;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
@@ -31,63 +30,59 @@ public class Document {
 
     public final static String TEMP_FILE_PREFIX = "pdfgen";
 
-    private static TemplateEngine TEMPLATE_ENGINE;
-
-    static {
-        TEMPLATE_ENGINE = new TemplateEngine();
-        TEMPLATE_ENGINE.setTemplateResolver(new StringTemplateResolver());
+    public static PageBuilder fromStaticHtml(String html) {
+        return new DocumentBuilder()
+                .withPage()
+                    .fromStaticHtml(html);
     }
 
-    public static DocumentBuilder fromStaticHtml(String html) {
-        return new DocumentBuilder(html);
-    }
-
-    public static DocumentBuilder fromStaticHtml(InputStream inputStream) {
+    public static PageBuilder fromStaticHtml(InputStream inputStream) {
         return fromStaticHtml(ToStringParser.parse(inputStream));
     }
 
-    public static DocumentBuilder fromStaticHtml(Reader reader) {
+    public static PageBuilder fromStaticHtml(Reader reader) {
         return fromStaticHtml(ToStringParser.parse(reader));
     }
 
-    public static DocumentBuilder fromStaticHtml(URL url) {
+    public static PageBuilder fromStaticHtml(URL url) {
         return fromStaticHtml(ToStringParser.parse(url));
     }
 
-    public static DocumentBuilder fromStaticHtml(File file) {
+    public static PageBuilder fromStaticHtml(File file) {
         return fromStaticHtml(ToStringParser.parse(file));
     }
 
-    public static DocumentBuilder fromStaticHtml(Path path) {
+    public static PageBuilder fromStaticHtml(Path path) {
         return fromStaticHtml(ToStringParser.parse(path));
     }
 
-    public static DocumentBuilder fromHtmlTemplate(String html, Map<String, Object> args) {
-        StringWriter sw = new StringWriter();
-        Context context = new Context();
-        context.setVariables(args);
-        TEMPLATE_ENGINE.process(html, context, sw);
-
-        return new DocumentBuilder(sw.toString());
+    public static PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
+        return new DocumentBuilder()
+                .withPage()
+                    .fromHtmlTemplate(htmlTemplate, params);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(inputStream), args);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(Reader reader, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(Reader reader, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(reader), args);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(URL url, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(URL url, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(url), args);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(File file, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(File file, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(file), args);
     }
 
-    public static DocumentBuilder fromHtmlTemplate(Path path, Map<String, Object> args) {
+    public static PageBuilder fromHtmlTemplate(Path path, Map<String, Object> args) {
         return fromHtmlTemplate(ToStringParser.parse(path), args);
+    }
+
+    public static PageBuilder withPage() {
+        return new DocumentBuilder().withPage();
     }
 }

@@ -55,13 +55,14 @@ byte[] pdf = db.toPdf();
 Thymeleaf templates
 ---------------
 
-[Thymeleaf webpage](https://www.thymeleaf.org/index.html)
-[Thymeleaf documentation](https://www.thymeleaf.org/documentation.html)
-[Thymeleaf GitHub](https://github.com/thymeleaf)
+* [Thymeleaf webpage](https://www.thymeleaf.org/index.html)
+* [Thymeleaf documentation](https://www.thymeleaf.org/documentation.html)
+* [Thymeleaf GitHub](https://github.com/thymeleaf)
+
 Working with Thymeleaf templates is as easy as with static html. All you have to do is call a proper method:
 ```java
-DocumentBuilder db = Document.fromHtmlTemplate(htmlTemplate, args)
-db.parameters()
+DocumentBuilder document = Document.fromHtmlTemplate(htmlTemplate, args)
+document.parameters()
     .portrait()
     .marginLeft("2cm")
     .marginRight("2cm")

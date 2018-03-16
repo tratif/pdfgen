@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ParameterBuilder {
-    private PageBuilder pageBuilder;
+    private PageBuilder parentBuilder;
     private Map<String, String> params;
 
-    ParameterBuilder(PageBuilder pageBuilder) {
-        this.pageBuilder = pageBuilder;
+    ParameterBuilder(PageBuilder parentBuilder) {
+        this.parentBuilder = parentBuilder;
         this.params = new HashMap<>();
     }
 
@@ -113,7 +113,7 @@ public class ParameterBuilder {
     }
 
     public PageBuilder and() {
-        return pageBuilder;
+        return parentBuilder;
     }
 
     public Map<String, String> build() {
@@ -121,6 +121,6 @@ public class ParameterBuilder {
     }
 
     public byte[] toPdf() {
-        return pageBuilder.toPdf();
+        return parentBuilder.toPdf();
     }
 }

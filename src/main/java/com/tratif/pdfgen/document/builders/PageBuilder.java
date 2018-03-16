@@ -1,27 +1,21 @@
 package com.tratif.pdfgen.document.builders;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.StringTemplateResolver;
+import com.tratif.pdfgen.document.renderers.HtmlRenderer;
+import com.tratif.pdfgen.document.renderers.ThymeleafHtmlRenderer;
 
-import java.io.StringWriter;
 import java.util.Map;
 
 public class PageBuilder {
 
-    private static TemplateEngine TEMPLATE_ENGINE;
-    static {
-        TEMPLATE_ENGINE = new TemplateEngine();
-        TEMPLATE_ENGINE.setTemplateResolver(new StringTemplateResolver());
-    }
+    private static HtmlRenderer htmlRenderer = new ThymeleafHtmlRenderer();
 
-    private DocumentBuilder documentBuilder;
+    private DocumentBuilder parentBuilder;
 
     private String content;
     private ParameterBuilder params;
 
-    public PageBuilder(DocumentBuilder documentBuilder) {
-        this.documentBuilder = documentBuilder;
+    public PageBuilder(DocumentBuilder parentBuilder) {
+        this.parentBuilder = parentBuilder;
         params = new ParameterBuilder(this);
     }
 
@@ -31,12 +25,7 @@ public class PageBuilder {
     }
 
     public PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
-        StringWriter sw = new StringWriter();
-        Context context = new Context();
-        context.setVariables(params);
-        TEMPLATE_ENGINE.process(htmlTemplate, context, sw);
-
-        content = sw.toString();
+        content = htmlRenderer.render(htmlTemplate, params);
         return this;
     }
 
@@ -45,7 +34,7 @@ public class PageBuilder {
     }
 
     public DocumentBuilder and() {
-        return documentBuilder;
+        return parentBuilder;
     }
 
     public ParameterBuilder getParams() {
@@ -57,6 +46,6 @@ public class PageBuilder {
     }
 
     public byte[] toPdf() {
-        return documentBuilder.toPdf();
+        return parentBuilder.toPdf();
     }
 }

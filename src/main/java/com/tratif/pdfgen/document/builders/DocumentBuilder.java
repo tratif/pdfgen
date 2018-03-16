@@ -42,7 +42,7 @@ public class DocumentBuilder {
     }
 
     public byte[] toPdf() {
-        if (pages.size() <= 0)
+        if (pages.isEmpty())
             throw new IllegalStateException("Nothing to render");
 
         List<PDF> pdfs = new SimplePdfRenderer().render(pages);
@@ -51,6 +51,6 @@ public class DocumentBuilder {
         }
 
         SimplePdfMerger merger = new SimplePdfMerger();
-        return merger.merge(pdfs, MemoryUsageSetting.setupMainMemoryOnly(1024 * 1024 * 128));
+        return merger.merge(pdfs);
     }
 }

@@ -46,20 +46,20 @@ public class SimplePdfRenderer {
             byte[] bytes = Files.readAllBytes(pdf.toPath());
 
             if (!html.delete()) {
-                log.debug("{} was not deleted.", html.getPath());
+                log.warn("{} was not deleted.", html.getPath());
             }
 
             if (!pdf.delete()) {
-                log.debug("{} was not deleted.", pdf.getPath());
+                log.warn("{} was not deleted.", pdf.getPath());
             }
 
             return new PDF(bytes);
 
         } catch (InterruptedException e) {
-            log.error("There was problem executing command.");
+            log.error("InterruptedException: There was problem executing command.");
             throw new RuntimeException("There was problem executing command.", e);
         } catch (IOException e) {
-            log.error("There was a problem with the file.");
+            log.error("IOException: There was a problem with the file.");
             throw new RuntimeException("There was a problem with the file.", e);
         }
     }

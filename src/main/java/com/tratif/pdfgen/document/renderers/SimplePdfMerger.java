@@ -11,7 +11,9 @@ import java.util.List;
 
 public class SimplePdfMerger {
 
-    public byte[] merge(List<PDF> pdfs, MemoryUsageSetting memoryUsageSetting) {
+    private static final MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMainMemoryOnly(1024 * 1024 * 128);
+
+    public byte[] merge(List<PDF> pdfs) {
         PDFMergerUtility merger = new PDFMergerUtility();
         pdfs.forEach(pdf -> merger.addSource(new ByteArrayInputStream(pdf.toByteArray())));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

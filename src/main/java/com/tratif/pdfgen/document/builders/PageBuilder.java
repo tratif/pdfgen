@@ -20,8 +20,8 @@ import com.tratif.pdfgen.document.parsers.ToStringParser;
 import com.tratif.pdfgen.document.providers.ContentProvider;
 import com.tratif.pdfgen.document.providers.InputStreamContentProvider;
 import com.tratif.pdfgen.document.providers.StringContentProvider;
-import com.tratif.pdfgen.document.renderers.HtmlRenderer;
-import com.tratif.pdfgen.document.renderers.ThymeleafHtmlRenderer;
+import com.tratif.pdfgen.document.renderers.html.HtmlRenderer;
+import com.tratif.pdfgen.document.renderers.html.ThymeleafHtmlRenderer;
 
 import java.io.File;
 import java.io.InputStream;
@@ -67,6 +67,8 @@ public class PageBuilder {
 	public byte[] toPdf() {
 		return parentBuilder.toPdf();
 	}
+
+	public String toHtml() { return parentBuilder.toHtml(); }
 
 	public PageBuilder fromStaticHtml(InputStream inputStream) {
 		contentProvider = new InputStreamContentProvider(inputStream);

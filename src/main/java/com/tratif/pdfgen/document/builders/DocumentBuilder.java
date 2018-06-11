@@ -16,23 +16,29 @@
 package com.tratif.pdfgen.document.builders;
 
 import com.tratif.pdfgen.document.PDF;
-import com.tratif.pdfgen.document.renderers.InputStreamPdfMerger;
-import com.tratif.pdfgen.document.renderers.InputStreamPdfRenderer;
-import com.tratif.pdfgen.document.renderers.PdfMerger;
-import com.tratif.pdfgen.document.renderers.PdfRenderer;
+import com.tratif.pdfgen.document.renderers.html.HtmlMerger;
+import com.tratif.pdfgen.document.renderers.html.HtmlRenderer;
+import com.tratif.pdfgen.document.renderers.html.SimpleHtmlMerger;
+import com.tratif.pdfgen.document.renderers.html.ThymeleafHtmlRenderer;
+import com.tratif.pdfgen.document.renderers.pdf.InputStreamPdfMerger;
+import com.tratif.pdfgen.document.renderers.pdf.InputStreamPdfRenderer;
+import com.tratif.pdfgen.document.renderers.pdf.PdfMerger;
+import com.tratif.pdfgen.document.renderers.pdf.PdfRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 public class DocumentBuilder {
-
-	private final static Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
 
 	private List<PageBuilder> pages;
 	private PdfMerger merger = new InputStreamPdfMerger();
 	private PdfRenderer renderer = new InputStreamPdfRenderer();
+	private HtmlMerger htmlMerger = new SimpleHtmlMerger();
 
 	public DocumentBuilder() {
 		pages = new ArrayList<>();
@@ -58,5 +64,13 @@ public class DocumentBuilder {
 		}
 
 		return merger.merge(pdfs);
+	}
+
+	public String toHtml() {
+		List<String> htmls = pages.stream()
+				.map(PageBuilder::toHtml)
+				.collect(toList());
+
+		return htmlMerger.merge(htmls);
 	}
 }

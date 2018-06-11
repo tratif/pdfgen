@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.renderers;
+package com.tratif.pdfgen.document.renderers.html;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;

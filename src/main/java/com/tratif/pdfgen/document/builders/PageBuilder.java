@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,96 +32,96 @@ import java.util.Map;
 
 public class PageBuilder {
 
-    private static HtmlRenderer htmlRenderer = new ThymeleafHtmlRenderer();
+	private static HtmlRenderer htmlRenderer = new ThymeleafHtmlRenderer();
 
-    private DocumentBuilder parentBuilder;
-    private ParameterBuilder params;
+	private DocumentBuilder parentBuilder;
+	private ParameterBuilder params;
 
-    private ContentProvider contentProvider;
+	private ContentProvider contentProvider;
 
-    public PageBuilder(DocumentBuilder parentBuilder) {
-        this.parentBuilder = parentBuilder;
-        params = new ParameterBuilder(this);
-    }
+	public PageBuilder(DocumentBuilder parentBuilder) {
+		this.parentBuilder = parentBuilder;
+		params = new ParameterBuilder(this);
+	}
 
-    public ParameterBuilder withParameters() {
-        return new ParameterBuilder(this);
-    }
+	public ParameterBuilder withParameters() {
+		return new ParameterBuilder(this);
+	}
 
-    public DocumentBuilder and() {
-        return parentBuilder;
-    }
+	public DocumentBuilder and() {
+		return parentBuilder;
+	}
 
-    public PageBuilder withPage() {
-        return parentBuilder.withPage();
-    }
+	public PageBuilder withPage() {
+		return parentBuilder.withPage();
+	}
 
-    public Map<String, String> getParams() {
-        return params.build();
-    }
+	public Map<String, String> getParams() {
+		return params.build();
+	}
 
-    public InputStream getContent() {
-        return contentProvider.getContent();
-    }
+	public InputStream getContent() {
+		return contentProvider.getContent();
+	}
 
-    public byte[] toPdf() {
-        return parentBuilder.toPdf();
-    }
+	public byte[] toPdf() {
+		return parentBuilder.toPdf();
+	}
 
-    public PageBuilder fromStaticHtml(InputStream inputStream) {
-        contentProvider = new InputStreamContentProvider(inputStream);
-        return this;
-    }
+	public PageBuilder fromStaticHtml(InputStream inputStream) {
+		contentProvider = new InputStreamContentProvider(inputStream);
+		return this;
+	}
 
-    public PageBuilder fromStaticHtml(String html) {
-        contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(html));
-        return this;
-    }
+	public PageBuilder fromStaticHtml(String html) {
+		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(html));
+		return this;
+	}
 
-    public PageBuilder fromStaticHtml(Reader reader) {
-        contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(reader));
-        return this;
-    }
+	public PageBuilder fromStaticHtml(Reader reader) {
+		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(reader));
+		return this;
+	}
 
-    public PageBuilder fromStaticHtml(URL url) {
-        contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(url));
-        return this;
-    }
+	public PageBuilder fromStaticHtml(URL url) {
+		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(url));
+		return this;
+	}
 
-    public PageBuilder fromStaticHtml(File file) {
-        contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(file));
-        return this;
-    }
+	public PageBuilder fromStaticHtml(File file) {
+		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(file));
+		return this;
+	}
 
-    public PageBuilder fromStaticHtml(Path path) {
-        contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(path));
-        return this;
-    }
+	public PageBuilder fromStaticHtml(Path path) {
+		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(path));
+		return this;
+	}
 
-    public PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> params) {
-        String htmlTemplate = ToStringParser.parse(inputStream);
-        String html = htmlRenderer.render(htmlTemplate, params);
-        contentProvider = new StringContentProvider(html);
-        return this;
-    }
+	public PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> params) {
+		String htmlTemplate = ToStringParser.parse(inputStream);
+		String html = htmlRenderer.render(htmlTemplate, params);
+		contentProvider = new StringContentProvider(html);
+		return this;
+	}
 
-    public PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
-        return fromHtmlTemplate(ToInputStreamParser.parse(htmlTemplate), params);
-    }
+	public PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
+		return fromHtmlTemplate(ToInputStreamParser.parse(htmlTemplate), params);
+	}
 
-    public PageBuilder fromHtmlTemplate(Reader reader, Map<String, Object> params) {
-        return fromHtmlTemplate(ToInputStreamParser.parse(reader), params);
-    }
+	public PageBuilder fromHtmlTemplate(Reader reader, Map<String, Object> params) {
+		return fromHtmlTemplate(ToInputStreamParser.parse(reader), params);
+	}
 
-    public PageBuilder fromHtmlTemplate(URL url, Map<String, Object> params) {
-        return fromHtmlTemplate(ToInputStreamParser.parse(url), params);
-    }
+	public PageBuilder fromHtmlTemplate(URL url, Map<String, Object> params) {
+		return fromHtmlTemplate(ToInputStreamParser.parse(url), params);
+	}
 
-    public PageBuilder fromHtmlTemplate(File file, Map<String, Object> params) {
-        return fromHtmlTemplate(ToInputStreamParser.parse(file), params);
-    }
+	public PageBuilder fromHtmlTemplate(File file, Map<String, Object> params) {
+		return fromHtmlTemplate(ToInputStreamParser.parse(file), params);
+	}
 
-    public PageBuilder fromHtmlTemplate(Path path, Map<String, Object> params) {
-        return fromHtmlTemplate(ToInputStreamParser.parse(path), params);
-    }
+	public PageBuilder fromHtmlTemplate(Path path, Map<String, Object> params) {
+		return fromHtmlTemplate(ToInputStreamParser.parse(path), params);
+	}
 }

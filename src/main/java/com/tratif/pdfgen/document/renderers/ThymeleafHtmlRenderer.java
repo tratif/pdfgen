@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,20 +23,20 @@ import java.io.StringWriter;
 import java.util.Map;
 
 public class ThymeleafHtmlRenderer implements HtmlRenderer {
-    private TemplateEngine templateEngine;
+	private TemplateEngine templateEngine;
 
-    public ThymeleafHtmlRenderer() {
-        templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(new StringTemplateResolver());
-    }
+	public ThymeleafHtmlRenderer() {
+		templateEngine = new TemplateEngine();
+		templateEngine.setTemplateResolver(new StringTemplateResolver());
+	}
 
-    @Override
-    public String render(String htmlTemplate, Map<String, Object> params) {
-        StringWriter sw = new StringWriter();
-        Context context = new Context();
-        context.setVariables(params);
-        templateEngine.process(htmlTemplate, context, sw);
+	@Override
+	public String render(String htmlTemplate, Map<String, Object> params) {
+		StringWriter sw = new StringWriter();
+		Context context = new Context();
+		context.setVariables(params);
+		templateEngine.process(htmlTemplate, context, sw);
 
-        return sw.toString();
-    }
+		return sw.toString();
+	}
 }

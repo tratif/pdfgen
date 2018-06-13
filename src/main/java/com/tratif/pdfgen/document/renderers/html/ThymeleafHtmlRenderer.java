@@ -17,6 +17,7 @@ package com.tratif.pdfgen.document.renderers.html;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import java.io.StringWriter;
@@ -27,6 +28,7 @@ public class ThymeleafHtmlRenderer implements HtmlRenderer {
 
 	public ThymeleafHtmlRenderer() {
 		templateEngine = new TemplateEngine();
+		templateEngine.addDialect(new Java8TimeDialect());
 		templateEngine.setTemplateResolver(new StringTemplateResolver());
 	}
 

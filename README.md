@@ -79,3 +79,14 @@ It is also possible to use `pdfgen` as simple Thymeleaf parsing engine:
 String parsedHtml = Document.fromHtmlTemplate(htmlTemplate, args)
                       .toHtml();
 ```
+
+Java8TimeDialect
+---------------
+`pdfgen` is able to resolve temporal formatting in Thymeleaf's templates. For example, this template:
+```html
+<div th:text="${#temporals.format(time, 'YYYY-MM-dd HH:mm:ss')}"></div>
+```
+assuming `time` is a `LocalDateTime` object of date `2018-06-13 12:09:30` will generate following output:
+```html
+<div>2018-06-13 12:09:30</div>
+```

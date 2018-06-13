@@ -17,23 +17,24 @@ package com.tratif.pdfgen.document.builders;
 
 import com.tratif.pdfgen.document.PDF;
 import com.tratif.pdfgen.document.renderers.html.HtmlMerger;
-import com.tratif.pdfgen.document.renderers.html.HtmlRenderer;
 import com.tratif.pdfgen.document.renderers.html.SimpleHtmlMerger;
-import com.tratif.pdfgen.document.renderers.html.ThymeleafHtmlRenderer;
 import com.tratif.pdfgen.document.renderers.pdf.InputStreamPdfMerger;
 import com.tratif.pdfgen.document.renderers.pdf.InputStreamPdfRenderer;
 import com.tratif.pdfgen.document.renderers.pdf.PdfMerger;
 import com.tratif.pdfgen.document.renderers.pdf.PdfRenderer;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 public class DocumentBuilder {
+
+	private static final Logger log = LoggerFactory.getLogger(DocumentBuilder.class);
 
 	private List<PageBuilder> pages;
 	private PdfMerger merger = new InputStreamPdfMerger();
@@ -67,8 +68,18 @@ public class DocumentBuilder {
 	}
 
 	public String toHtml() {
+		if(pages.isEmpty())
+			throw new IllegalStateException("Nothing to render");
+
 		List<String> htmls = pages.stream()
-				.map(PageBuilder::toHtml)
+				.map(page -> {
+					try {
+						return IOUtils.toString(page.getContent(), "UTF-8");
+					} catch (IOException e) {
+						log.warn("Failed to read input stream.");
+						return null;
+					}
+				})
 				.collect(toList());
 
 		return htmlMerger.merge(htmls);

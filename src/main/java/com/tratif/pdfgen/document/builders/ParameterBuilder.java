@@ -112,6 +112,16 @@ public class ParameterBuilder {
 		return this;
 	}
 
+	public ParameterBuilder footerHtml(String filename) {
+		params.put("--footer-html", filename);
+		return this;
+	}
+
+	public ParameterBuilder headerHtml(String filename) {
+		params.put("--header-html", filename);
+		return this;
+	}
+
 	public PageBuilder and() {
 		return parentBuilder;
 	}

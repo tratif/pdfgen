@@ -15,6 +15,9 @@
  */
 package com.tratif.pdfgen.helpers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,8 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public class CommandLineExecutor {
+
+	private static final Logger log = LoggerFactory.getLogger(CommandLineExecutor.class);
 
 	private String cmd;
 	private List<String> args;
@@ -47,7 +52,10 @@ public class CommandLineExecutor {
 		joiner.add(cmd);
 		args.forEach(joiner::add);
 		try {
-			return runtime.exec(joiner.toString());
+			String command = joiner.toString();
+//			log.debug("Running command: {}", command);
+			System.out.println("Running command: " + command);
+			return runtime.exec(command);
 		} catch (IOException e) {
 			throw new RuntimeException("Running command has failed.", e);
 		}
@@ -62,8 +70,10 @@ public class CommandLineExecutor {
 	}
 
 	private String formatOptionalArgument(Map.Entry<String, String> entry) {
-		if (entry.getValue().equals(""))
+		if (entry.getValue().equals("")) {
 			return entry.getKey();
+		}
+
 		return entry.getKey() + " " + entry.getValue();
 	}
 }

@@ -56,8 +56,9 @@ public class DocumentBuilder {
 	}
 
 	public PDF toPdfObject() {
-		if (pages.isEmpty())
+		if (pages.isEmpty()) {
 			throw new IllegalStateException("Nothing to render");
+		}
 
 		List<PDF> pdfs = renderer.render(pages);
 		if (pdfs.size() == 1) {
@@ -68,8 +69,9 @@ public class DocumentBuilder {
 	}
 
 	public String toHtml() {
-		if(pages.isEmpty())
+		if(pages.isEmpty()) {
 			throw new IllegalStateException("Nothing to render");
+		}
 
 		List<String> htmls = pages.stream()
 				.map(page -> {

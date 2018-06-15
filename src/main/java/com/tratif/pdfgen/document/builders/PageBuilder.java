@@ -45,7 +45,8 @@ public class PageBuilder {
 	}
 
 	public ParameterBuilder withParameters() {
-		return new ParameterBuilder(this);
+		params = new ParameterBuilder(this);
+		return params;
 	}
 
 	public DocumentBuilder and() {

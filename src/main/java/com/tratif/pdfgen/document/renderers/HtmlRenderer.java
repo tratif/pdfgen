@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.providers;
+package com.tratif.pdfgen.document.renderers.html;
 
-import java.io.InputStream;
+import com.tratif.pdfgen.document.template.RenderableDocument;
+import com.tratif.pdfgen.document.template.RenderedDocument;
 
-public class InputStreamContentProvider implements ContentProvider {
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.List;
 
-	private InputStream content;
+public interface HtmlRenderer {
 
-	public InputStreamContentProvider(InputStream content) {
-		this.content = content;
-	}
+//	String render(String htmlTemplate, Map<String, Object> params);
+//
+//	void render(String templateName, Map<String, Object> params, FileWriter fileWriter);
 
-	@Override
-	public InputStream getContent() {
-		return content;
-	}
+	void render(RenderableDocument page, Writer writer);
 }

@@ -13,11 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.renderers.html;
+package com.tratif.pdfgen.document.renderers.pdf;
 
-import java.util.Map;
+import com.tratif.pdfgen.document.template.RenderableDocument;
+import com.tratif.pdfgen.document.template.RenderedDocument;
 
-public interface HtmlRenderer {
+import java.util.List;
 
-	String render(String htmlTemplate, Map<String, Object> params);
+import static java.util.stream.Collectors.toList;
+
+public interface PdfRenderer {
+
+	RenderedDocument render(RenderableDocument document, String destinationFilename);
+
+	default List<RenderedDocument> render(List<RenderableDocument> documents, String destinationFilename) {
+		return documents.stream()
+				.map(doc -> render(doc, destinationFilename))
+				.collect(toList());
+	}
 }

@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.document.renderers.pdf;
 
-public class SimpleParameter {
+import com.tratif.pdfgen.document.PDF;
 
-	private String content;
+import java.util.List;
 
-	public SimpleParameter(String content) {
-		this.content = content;
-	}
+public interface PdfMerger {
 
-	public String getContent() {
-		return content;
-	}
+	PDF merge(List<PDF> pdfs);
 }

@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.document.providers;
 
-public class SimpleParameter {
+import java.io.InputStream;
 
-	private String content;
+public class InputStreamContentProvider implements ContentProvider {
 
-	public SimpleParameter(String content) {
+	private InputStream content;
+
+	public InputStreamContentProvider(InputStream content) {
 		this.content = content;
 	}
 
-	public String getContent() {
+	@Override
+	public InputStream getContent() {
 		return content;
 	}
 }

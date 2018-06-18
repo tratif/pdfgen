@@ -13,17 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.document.renderers.html;
 
-public class SimpleParameter {
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
-	private String content;
+import java.util.List;
 
-	public SimpleParameter(String content) {
-		this.content = content;
-	}
+public class SimpleHtmlMerger implements HtmlMerger {
 
-	public String getContent() {
-		return content;
+	@Override
+	public String merge(List<String> htmls) {
+		if (htmls.size() == 1) {
+			return htmls.get(0);
+		}
+
+		Document base = Jsoup.parse("<html><head></head><body></body></html>");
+		htmls.forEach(html -> {
+			Document doc = Jsoup.parse(html);
+			base.head().append(doc.head().html());
+			base.body().append(doc.body().html());
+		});
+
+		return base.html();
 	}
 }

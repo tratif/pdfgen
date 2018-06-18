@@ -13,17 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen;
 
-public class SimpleParameter {
+import com.tratif.pdfgen.asserts.BigFileGenerator;
+import com.tratif.pdfgen.document.Document;
+import com.tratif.pdfgen.document.PDF;
+import org.junit.Ignore;
+import org.junit.Test;
 
-	private String content;
+import java.io.File;
 
-	public SimpleParameter(String content) {
-		this.content = content;
-	}
+public class BigFileTest {
 
-	public String getContent() {
-		return content;
+	@Test
+	@Ignore
+	public void bigFile() {
+		File bigFile = BigFileGenerator.generateHtml(1024);
+		PDF pdf = Document.fromStaticHtml(bigFile)
+				.and().toPdfObject();
+
+		File destination = new File("test.pdf");
+
+		pdf.toFile(destination);
+
+		bigFile.delete();
+		destination.delete();
 	}
 }

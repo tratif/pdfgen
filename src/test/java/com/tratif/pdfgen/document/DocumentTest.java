@@ -29,37 +29,37 @@ import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
 
 public class DocumentTest {
 
-    @Test
-    public void pdfHasProperContentFromString() {
-        String html = "<h1>Hello world</h1>";
-        assertThat(Document.fromStaticHtml(html).toPdf())
-                .contains("Hello")
-                .contains("world");
-    }
+	@Test
+	public void pdfHasProperContentFromString() {
+		String html = "<h1>Hello world</h1>";
+		assertThat(Document.fromStaticHtml(html).toPdf())
+				.contains("Hello")
+				.contains("world");
+	}
 
-    @Test
-    public void pdfHasProperContentFromInputStream() {
-        InputStream inputStream = new ByteArrayInputStream("<h1>Hello world</h1>".getBytes());
-        assertThat(Document.fromStaticHtml(inputStream).toPdf())
-                .contains("Hello")
-                .contains("world");
-    }
+	@Test
+	public void pdfHasProperContentFromInputStream() {
+		InputStream inputStream = new ByteArrayInputStream("<h1>Hello world</h1>".getBytes());
+		assertThat(Document.fromStaticHtml(inputStream).toPdf())
+				.contains("Hello")
+				.contains("world");
+	}
 
-    @Test
-    public void pdfHasProperContentFromReader() {
-        Reader reader = new StringReader("<h1>Hello world</h1>");
-        assertThat(Document.fromStaticHtml(reader).toPdf())
-                .contains("Hello")
-                .contains("world");
-    }
+	@Test
+	public void pdfHasProperContentFromReader() {
+		Reader reader = new StringReader("<h1>Hello world</h1>");
+		assertThat(Document.fromStaticHtml(reader).toPdf())
+				.contains("Hello")
+				.contains("world");
+	}
 
-    @Test
-    public void parametersAreBoundToHtmlTemplate() {
-        Map<String, Object> args = ImmutableMap.of("text", new SimpleParameter("myContent"));
-        String htmlTemplate = "<h1>First page</h1><p th:text=\"${text.content}\"></p>";
+	@Test
+	public void parametersAreBoundToHtmlTemplate() {
+		Map<String, Object> args = ImmutableMap.of("text", new SimpleParameter("myContent"));
+		String htmlTemplate = "<h1>First page</h1><p th:text=\"${text.content}\"></p>";
 
-        assertThat(Document.fromHtmlTemplate(htmlTemplate, args).toPdf())
-                .isProperPdfFile()
-                .contains("myContent");
-    }
+		assertThat(Document.fromHtmlTemplate(htmlTemplate, args).toPdf())
+				.isProperPdfFile()
+				.contains("myContent");
+	}
 }

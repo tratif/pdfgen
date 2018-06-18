@@ -13,17 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.asserts;
 
-public class SimpleParameter {
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
-	private String content;
+public class BigFileGenerator {
 
-	public SimpleParameter(String content) {
-		this.content = content;
+	public static File generateHtml(long kb) {
+		String line = "<p>CONTENT LINE</p>\n";
+
+		try {
+			File file = File.createTempFile("pdfgen", ".html");
+			FileWriter fw = new FileWriter(file);
+
+			for (long i = 0; i < kb; i++) {
+				for (int j = 0; j < 1024 / line.length(); j++) {
+					fw.write(line);
+				}
+
+				fw.flush();
+			}
+			fw.close();
+			return file;
+		} catch (IOException e) {
+			throw new RuntimeException("Failed creating file.", e);
+		}
 	}
 
-	public String getContent() {
-		return content;
-	}
 }

@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.document.renderers.pdf;
 
-public class SimpleParameter {
+import com.tratif.pdfgen.document.PDF;
+import com.tratif.pdfgen.document.builders.PageBuilder;
 
-	private String content;
+import java.util.List;
 
-	public SimpleParameter(String content) {
-		this.content = content;
-	}
+import static java.util.stream.Collectors.toList;
 
-	public String getContent() {
-		return content;
+public interface PdfRenderer {
+
+	PDF render(PageBuilder page);
+
+	default List<PDF> render(List<PageBuilder> pages) {
+		return pages.stream()
+				.map(this::render)
+				.collect(toList());
 	}
 }

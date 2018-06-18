@@ -17,7 +17,6 @@ package com.tratif.pdfgen.document;
 
 import com.tratif.pdfgen.document.builders.DocumentBuilder;
 import com.tratif.pdfgen.document.builders.PageBuilder;
-import com.tratif.pdfgen.document.builders.ToStringParser;
 
 import java.io.File;
 import java.io.InputStream;
@@ -28,61 +27,81 @@ import java.util.Map;
 
 public class Document {
 
-    public final static String TEMP_FILE_PREFIX = "pdfgen";
+	public final static String TEMP_FILE_PREFIX = "pdfgen";
 
-    public static PageBuilder fromStaticHtml(String html) {
-        return new DocumentBuilder()
-                .withPage()
-                    .fromStaticHtml(html);
-    }
+	public static PageBuilder fromStaticHtml(String html) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromStaticHtml(html);
+	}
 
-    public static PageBuilder fromStaticHtml(InputStream inputStream) {
-        return fromStaticHtml(ToStringParser.parse(inputStream));
-    }
+	public static PageBuilder fromStaticHtml(InputStream inputStream) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromStaticHtml(inputStream);
+	}
 
-    public static PageBuilder fromStaticHtml(Reader reader) {
-        return fromStaticHtml(ToStringParser.parse(reader));
-    }
+	public static PageBuilder fromStaticHtml(Reader reader) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromStaticHtml(reader);
+	}
 
-    public static PageBuilder fromStaticHtml(URL url) {
-        return fromStaticHtml(ToStringParser.parse(url));
-    }
+	public static PageBuilder fromStaticHtml(URL url) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromStaticHtml(url);
+	}
 
-    public static PageBuilder fromStaticHtml(File file) {
-        return fromStaticHtml(ToStringParser.parse(file));
-    }
+	public static PageBuilder fromStaticHtml(File file) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromStaticHtml(file);
+	}
 
-    public static PageBuilder fromStaticHtml(Path path) {
-        return fromStaticHtml(ToStringParser.parse(path));
-    }
+	public static PageBuilder fromStaticHtml(Path path) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromStaticHtml(path);
+	}
 
-    public static PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
-        return new DocumentBuilder()
-                .withPage()
-                    .fromHtmlTemplate(htmlTemplate, params);
-    }
+	public static PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromHtmlTemplate(htmlTemplate, params);
+	}
 
-    public static PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> args) {
-        return fromHtmlTemplate(ToStringParser.parse(inputStream), args);
-    }
+	public static PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> params) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromHtmlTemplate(inputStream, params);
+	}
 
-    public static PageBuilder fromHtmlTemplate(Reader reader, Map<String, Object> args) {
-        return fromHtmlTemplate(ToStringParser.parse(reader), args);
-    }
+	public static PageBuilder fromHtmlTemplate(Reader reader, Map<String, Object> params) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromHtmlTemplate(reader, params);
+	}
 
-    public static PageBuilder fromHtmlTemplate(URL url, Map<String, Object> args) {
-        return fromHtmlTemplate(ToStringParser.parse(url), args);
-    }
+	public static PageBuilder fromHtmlTemplate(URL url, Map<String, Object> params) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromHtmlTemplate(url, params);
+	}
 
-    public static PageBuilder fromHtmlTemplate(File file, Map<String, Object> args) {
-        return fromHtmlTemplate(ToStringParser.parse(file), args);
-    }
+	public static PageBuilder fromHtmlTemplate(File file, Map<String, Object> params) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromHtmlTemplate(file, params);
+	}
 
-    public static PageBuilder fromHtmlTemplate(Path path, Map<String, Object> args) {
-        return fromHtmlTemplate(ToStringParser.parse(path), args);
-    }
+	public static PageBuilder fromHtmlTemplate(Path path, Map<String, Object> params) {
+		return new DocumentBuilder()
+				.withPage()
+				.fromHtmlTemplate(path, params);
+	}
 
-    public static PageBuilder withPage() {
-        return new DocumentBuilder().withPage();
-    }
+	public static PageBuilder withPage() {
+		return new DocumentBuilder().withPage();
+	}
 }

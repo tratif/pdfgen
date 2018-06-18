@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.document.renderers.html;
 
-public class SimpleParameter {
+import java.util.Map;
 
-	private String content;
+public interface HtmlRenderer {
 
-	public SimpleParameter(String content) {
-		this.content = content;
-	}
-
-	public String getContent() {
-		return content;
-	}
+	String render(String htmlTemplate, Map<String, Object> params);
 }

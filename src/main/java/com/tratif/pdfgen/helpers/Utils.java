@@ -13,17 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.helpers;
 
-public class SimpleParameter {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-	private String content;
+public class Utils {
 
-	public SimpleParameter(String content) {
-		this.content = content;
-	}
+	public static void writeStreamToFile(File file, InputStream inputStream) throws IOException {
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			int b;
+			int i = 1;
+			while ((b = inputStream.read()) != -1) {
+				fos.write(b);
 
-	public String getContent() {
-		return content;
+				if (i % 1000 == 0) {
+					fos.flush();
+				}
+
+				i++;
+			}
+		}
 	}
 }

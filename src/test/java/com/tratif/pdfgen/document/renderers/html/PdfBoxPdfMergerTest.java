@@ -42,11 +42,11 @@ public class PdfBoxPdfMergerTest {
 		String html2 = "<html><head><link href=\"head2\"></head><body><p>body2</p></body></html>";
 
 		List<HtmlDocument> htmls = Arrays.asList(
-				new HtmlDocument(asFile(html1).getPath()),
-				new HtmlDocument(asFile(html2).getPath())
+				new HtmlDocument(asFile(html1)),
+				new HtmlDocument(asFile(html2))
 		);
 
-		assertThat(htmlMerger.merge(htmls))
+		assertThat(htmlMerger.merge(htmls).asString())
 				.contains(
 						"<link href=\"head1\">",
 						"<link href=\"head2\">",

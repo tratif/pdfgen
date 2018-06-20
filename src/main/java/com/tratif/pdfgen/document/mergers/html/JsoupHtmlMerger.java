@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
 package com.tratif.pdfgen.document.mergers.html;
 
 import com.tratif.pdfgen.document.docs.HtmlDocument;
+import com.tratif.pdfgen.utils.ToFileConverter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -23,35 +24,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 public class JsoupHtmlMerger implements HtmlMerger {
 
-//	@Override
-//	public String merge(List<String> htmls) {
-//		if (htmls.size() == 1) {
-//			return htmls.get(0);
-//		}
-//
-//		Document base = Jsoup.parse("<html><head></head><body></body></html>");
-//		htmls.forEach(html -> {
-//			Document doc = Jsoup.parse(html);
-//			base.head().append(doc.head().html());
-//			base.body().append(doc.body().html());
-//		});
-//
-//		return base.html();
-//	}
-
 	@Override
-	public String merge(List<HtmlDocument> htmls) {
-		List<String> htmlStrings = convertToStrings(htmls);
-
-		if (htmlStrings.size() == 1) {
-			return htmlStrings.get(0);
+	public HtmlDocument merge(List<HtmlDocument> pages) {
+		if (pages.size() == 1) {
+			return pages.get(0);
 		}
+
+		List<String> htmlStrings = convertToStrings(pages);
 
 		Document base = Jsoup.parse("<html><head></head><body></body></html>");
 		htmlStrings.forEach(html -> {
@@ -60,14 +44,20 @@ public class JsoupHtmlMerger implements HtmlMerger {
 			base.body().append(doc.body().html());
 		});
 
-		return base.html();
+		try {
+			return new HtmlDocument(
+					ToFileConverter.convert(base.html(), "html")
+			);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to save template file");
+		}
 	}
 
-	private List<String> convertToStrings(List<HtmlDocument> htmls) {
-		return htmls.stream()
+	private List<String> convertToStrings(List<HtmlDocument> pages) {
+		return pages.stream()
 				.map(html -> {
 					try {
-						return new String(Files.readAllBytes(Paths.get(html.getFilename())), "UTF-8");
+						return new String(Files.readAllBytes(Paths.get(html.asFile().getPath())), "UTF-8");
 					} catch (IOException e) {
 						throw new RuntimeException("Failed to load file");
 					}

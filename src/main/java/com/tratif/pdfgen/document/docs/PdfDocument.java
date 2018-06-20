@@ -1,18 +1,20 @@
 package com.tratif.pdfgen.document.docs;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
-public class PdfDocument extends RenderableDocument {
+public class PdfDocument {
 
-	public PdfDocument(String filename) {
-		super(filename);
+	private File file;
+
+	public PdfDocument(File file) {
+		this.file = file;
 	}
 
 	public byte[] toByteArray() {
 		try {
-			return Files.readAllBytes(Paths.get(getFilename()));
+			return Files.readAllBytes(file.toPath());
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to read file.");
 		}

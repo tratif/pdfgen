@@ -15,48 +15,37 @@
  */
 package com.tratif.pdfgen.document.renderers.html;
 
-//public class ThymeleafHtmlRenderer implements HtmlRenderer {
-//	private TemplateEngine templateEngine;
-//
-//	public ThymeleafHtmlRenderer() {
-//		templateEngine = new TemplateEngine();
-//		templateEngine.addDialect(new Java8TimeDialect());
-//		templateEngine.setTemplateResolver(new StringTemplateResolver());
-//	}
+import com.tratif.pdfgen.document.docs.HtmlTemplate;
+import com.tratif.pdfgen.document.renderers.HtmlRenderer;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
+import org.thymeleaf.templateresolver.StringTemplateResolver;
 
-//	@Override
-//	public String render(String htmlTemplate, Map<String, Object> params) {
-//		templateEngine.setTemplateResolver(new StringTemplateResolver());
-//
-//		StringWriter sw = new StringWriter();
-//		Context context = new Context();
-//		context.setVariables(params);
-//		templateEngine.process(htmlTemplate, context, sw);
-//
-//		return sw.toString();
-//	}
-//
-//	@Override
-//	public void render(String templateName, Map<String, Object> params, FileWriter fileWriter) {
-//		templateEngine.setTemplateResolver(new FileTemplateResolver());
-//
-//		Context context = new Context();
-//		context.setVariables(params);
-//		templateEngine.process(templateName, context, fileWriter);
-//	}
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Map;
 
-//	@Override
-//	public RenderedDocument render(List<RenderableDocument> pages, FileWriter fileWriter) {
-////		templateEngine.setTemplateResolver(new FileTemplateResolver());
-////
-////		pages.stream()
-////			.map(page -> {
-////				if (page instanceof TemplateDocument) {
-////					TemplateDocument doc = (TemplateDocument) page;
-//////					render(doc.getContentProvider().getContent(), doc.getParams(), fileWriter);
-////				}
-////			})
-//
-//		return null;
-//	}
-//}
+public class ThymeleafHtmlRenderer implements HtmlRenderer {
+
+	private TemplateEngine templateEngine;
+
+	public ThymeleafHtmlRenderer() {
+		templateEngine = new TemplateEngine();
+		templateEngine.addDialect(new Java8TimeDialect());
+		templateEngine.setTemplateResolver(new FileTemplateResolver());
+	}
+
+	@Override
+	public void render(HtmlTemplate page, Writer writer) {
+		Context context = new Context();
+		context.setVariables(page.getParams());
+		try {
+			templateEngine.process(page.asFile().getPath(), context, writer);
+		} catch (IOException e) {
+			throw new RuntimeException("Error while parsing template");
+		}
+	}
+}

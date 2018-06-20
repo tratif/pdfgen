@@ -19,16 +19,17 @@ import com.tratif.pdfgen.document.docs.HtmlDocument;
 import com.tratif.pdfgen.document.docs.PdfDocument;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
 public interface PdfRenderer {
 
-	PdfDocument render(HtmlDocument document, String destinationFilename);
+	PdfDocument render(HtmlDocument document, String destinationFilename, Map<String, String> renderParams);
 
-	default List<PdfDocument> render(List<HtmlDocument> documents, String destinationFilename) {
+	default List<PdfDocument> render(List<HtmlDocument> documents, String destinationFilename, Map<String, String> renderParams) {
 		return documents.stream()
-				.map(doc -> render(doc, destinationFilename))
+				.map(doc -> render(doc, destinationFilename, renderParams))
 				.collect(toList());
 	}
 }

@@ -7,23 +7,21 @@ import com.tratif.pdfgen.helpers.CommandLineExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.Map;
 
 public class FilePdfRenderer implements PdfRenderer {
 
 	private static final Logger log = LoggerFactory.getLogger(FilePdfRenderer.class);
 
 	@Override
-	public PdfDocument render(HtmlDocument document, String destinationFilename) {
+	public PdfDocument render(HtmlDocument document, String destinationFilename, Map<String, String> renderParams) {
 		try {
 			CommandLineExecutor executor = new CommandLineExecutor();
 			Process process = executor.command("wkhtmltopdf")
 					.withArgument("--encoding utf-8")
-					.withArguments(document.getRenderParams())
-					.withArgument(document.getFilename())
+					.withArguments(renderParams)
+					.withArgument(document.asFile().getPath())
 					.withArgument(destinationFilename)
 					.execute();
 
@@ -34,7 +32,7 @@ public class FilePdfRenderer implements PdfRenderer {
 				throw new RuntimeException("wkhtmltopdf was terminated with exit code " + exitCode);
 			}
 
-			return new PdfDocument(destinationFilename);
+			return new PdfDocument(new File(destinationFilename));
 		} catch (InterruptedException e) {
 			log.error("InterruptedException: There was problem executing command.");
 			throw new RuntimeException("There was problem executing command.", e);

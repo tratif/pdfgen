@@ -2,7 +2,9 @@ package com.tratif.pdfgen.document.providers;
 
 import com.tratif.pdfgen.document.renderers.EngineNotSupportedException;
 import com.tratif.pdfgen.document.renderers.HtmlRenderer;
-import com.tratif.pdfgen.document.renderers.html.*;
+import com.tratif.pdfgen.document.renderers.html.FreeMarkerHtmlRenderer;
+import com.tratif.pdfgen.document.renderers.html.HtmlTemplateEngine;
+import com.tratif.pdfgen.document.renderers.html.ThymeleafHtmlRenderer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +15,7 @@ public class HtmlTemplateEngineProvider {
 
 	static {
 		RENDERER_REGISTRY = new HashMap<>();
-//		RENDERER_REGISTRY.put(HtmlTemplateEngine.THYMELEAF, new ThymeleafHtmlRenderer());
+		RENDERER_REGISTRY.put(HtmlTemplateEngine.THYMELEAF, new ThymeleafHtmlRenderer());
 		RENDERER_REGISTRY.put(HtmlTemplateEngine.FREEMARKER, new FreeMarkerHtmlRenderer());
 	}
 

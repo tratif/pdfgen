@@ -1,7 +1,7 @@
-package com.tratif.pdfgen.document.renderers.html;
+package com.tratif.pdfgen.document.renderers;
 
-public class HtmlEngineNotSupportedException extends RuntimeException {
-	public HtmlEngineNotSupportedException() {
+public class EngineNotSupportedException extends RuntimeException {
+	public EngineNotSupportedException() {
 		super("Html engine is not supported.");
 	}
 }

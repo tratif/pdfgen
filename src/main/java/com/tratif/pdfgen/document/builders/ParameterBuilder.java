@@ -129,8 +129,4 @@ public class ParameterBuilder {
 	public Map<String, String> build() {
 		return params;
 	}
-
-	public byte[] toPdf() {
-		return parentBuilder.toPdf();
-	}
 }

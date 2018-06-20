@@ -17,6 +17,7 @@ package com.tratif.pdfgen.document;
 
 import com.tratif.pdfgen.document.builders.DocumentBuilder;
 import com.tratif.pdfgen.document.builders.PageBuilder;
+import com.tratif.pdfgen.document.docs.RenderableDocument;
 
 import java.io.File;
 import java.io.InputStream;
@@ -26,8 +27,6 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class Document {
-
-	public final static String TEMP_FILE_PREFIX = "pdfgen";
 
 	public static PageBuilder fromStaticHtml(String html) {
 		return new DocumentBuilder()

@@ -15,9 +15,15 @@
  */
 package com.tratif.pdfgen.document.providers;
 
-import java.io.InputStream;
+public class ContentProvider<T> {
 
-public interface ContentProvider {
+	private T content;
 
-	InputStream getContent();
+	public ContentProvider(T content) {
+		this.content = content;
+	}
+
+	public T getContent() {
+		return content;
+	}
 }

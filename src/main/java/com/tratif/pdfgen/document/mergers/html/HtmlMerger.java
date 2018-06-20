@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.renderers.html;
+package com.tratif.pdfgen.document.mergers.html;
+
+import com.tratif.pdfgen.document.docs.HtmlDocument;
 
 import java.util.List;
 
 public interface HtmlMerger {
 
-	String merge(List<String> htmls);
+	String merge(List<HtmlDocument> htmls);
 }

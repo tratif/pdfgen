@@ -28,15 +28,15 @@ public class BigFileTest {
 	@Test
 	@Ignore
 	public void bigFile() {
-		File bigFile = BigFileGenerator.generateHtml(1024);
-		PDF pdf = Document.fromStaticHtml(bigFile)
-				.and().toPdfObject();
-
-		File destination = new File("test.pdf");
-
-		pdf.toFile(destination);
-
-		bigFile.delete();
-		destination.delete();
+//		File bigFile = BigFileGenerator.generateHtml(1024);
+//		PDF pdf = Document.fromStaticHtml(bigFile)
+//				.and().toPdfObject();
+//
+//		File destination = new File("test.pdf");
+//
+//		pdf.toFile(destination);
+//
+//		bigFile.delete();
+//		destination.delete();
 	}
 }

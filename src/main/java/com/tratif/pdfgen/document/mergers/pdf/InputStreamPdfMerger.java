@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.renderers.pdf;
+package com.tratif.pdfgen.document.mergers.pdf;
 
 import com.tratif.pdfgen.document.PDF;
 import com.tratif.pdfgen.document.mergers.pdf.PdfMerger;

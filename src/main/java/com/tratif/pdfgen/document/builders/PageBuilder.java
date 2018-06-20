@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,31 +15,26 @@
  */
 package com.tratif.pdfgen.document.builders;
 
+import com.tratif.pdfgen.document.docs.HtmlDocument;
+import com.tratif.pdfgen.document.docs.HtmlTemplate;
 import com.tratif.pdfgen.document.parsers.ToInputStreamParser;
-import com.tratif.pdfgen.document.parsers.ToStringParser;
 import com.tratif.pdfgen.document.providers.ContentProvider;
-import com.tratif.pdfgen.document.providers.InputStreamContentProvider;
-import com.tratif.pdfgen.document.providers.StringContentProvider;
-import com.tratif.pdfgen.document.renderers.html.HtmlRenderer;
-import com.tratif.pdfgen.document.renderers.html.ThymeleafHtmlRenderer;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.UUID;
 
 public class PageBuilder {
 
-	private static HtmlRenderer htmlRenderer = new ThymeleafHtmlRenderer();
-
 	private DocumentBuilder parentBuilder;
 	private ParameterBuilder params;
+	private HtmlDocument document;
 
-	private ContentProvider contentProvider;
-
-	public PageBuilder(DocumentBuilder parentBuilder) {
+	PageBuilder(DocumentBuilder parentBuilder) {
 		this.parentBuilder = parentBuilder;
 		params = new ParameterBuilder(this);
 	}
@@ -50,81 +45,86 @@ public class PageBuilder {
 	}
 
 	public DocumentBuilder and() {
+		document.setRenderParams(params.build());
+		parentBuilder.addPage(document);
 		return parentBuilder;
 	}
 
-	public PageBuilder withPage() {
-		return parentBuilder.withPage();
-	}
-
-	public Map<String, String> getParams() {
-		return params.build();
-	}
-
-	public InputStream getContent() {
-		return contentProvider.getContent();
-	}
-
-	public byte[] toPdf() {
-		return parentBuilder.toPdf();
-	}
-
-	public String toHtml() { return parentBuilder.toHtml(); }
-
-	public PageBuilder fromStaticHtml(InputStream inputStream) {
-		contentProvider = new InputStreamContentProvider(inputStream);
-		return this;
-	}
-
 	public PageBuilder fromStaticHtml(String html) {
-		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(html));
-		return this;
+		return fromStaticHtml(asFile(ToInputStreamParser.parse(html)));
 	}
 
 	public PageBuilder fromStaticHtml(Reader reader) {
-		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(reader));
-		return this;
+		return fromStaticHtml(asFile(ToInputStreamParser.parse(reader)));
 	}
 
 	public PageBuilder fromStaticHtml(URL url) {
-		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(url));
-		return this;
-	}
-
-	public PageBuilder fromStaticHtml(File file) {
-		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(file));
-		return this;
+		return fromStaticHtml(asFile(ToInputStreamParser.parse(url)));
 	}
 
 	public PageBuilder fromStaticHtml(Path path) {
-		contentProvider = new InputStreamContentProvider(ToInputStreamParser.parse(path));
-		return this;
+		return fromStaticHtml(asFile(ToInputStreamParser.parse(path)));
+	}
+
+	public PageBuilder fromStaticHtml(InputStream inputStream) {
+		return fromStaticHtml(asFile(inputStream));
+	}
+
+	//------- From template -------
+
+	public PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
+		return fromHtmlTemplate(
+				asFile(ToInputStreamParser.parse(htmlTemplate)),
+				params
+		);
 	}
 
 	public PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> params) {
-		String htmlTemplate = ToStringParser.parse(inputStream);
-		String html = htmlRenderer.render(htmlTemplate, params);
-		contentProvider = new StringContentProvider(html);
-		return this;
-	}
-
-	public PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
-		return fromHtmlTemplate(ToInputStreamParser.parse(htmlTemplate), params);
+		return fromHtmlTemplate(asFile(inputStream), params);
 	}
 
 	public PageBuilder fromHtmlTemplate(Reader reader, Map<String, Object> params) {
-		return fromHtmlTemplate(ToInputStreamParser.parse(reader), params);
+		return fromHtmlTemplate(
+				asFile(ToInputStreamParser.parse(reader)),
+				params
+		);
 	}
 
 	public PageBuilder fromHtmlTemplate(URL url, Map<String, Object> params) {
-		return fromHtmlTemplate(ToInputStreamParser.parse(url), params);
-	}
-
-	public PageBuilder fromHtmlTemplate(File file, Map<String, Object> params) {
-		return fromHtmlTemplate(ToInputStreamParser.parse(file), params);
+		return fromHtmlTemplate(
+				asFile(ToInputStreamParser.parse(url)),
+				params
+		);
 	}
 
 	public PageBuilder fromHtmlTemplate(Path path, Map<String, Object> params) {
-		return fromHtmlTemplate(ToInputStreamParser.parse(path), params);
+		return fromHtmlTemplate(
+				asFile(ToInputStreamParser.parse(path)),
+				params
+		);
+	}
+
+	public PageBuilder fromStaticHtml(File file) {
+		document = new HtmlDocument(file.getPath());
+		return this;
+	}
+
+	public PageBuilder fromHtmlTemplate(File file, Map<String, Object> params) {
+		document = new HtmlTemplate(file.getPath(), params);
+		return this;
+	}
+
+	private File asFile(InputStream inputStream) {
+		try {
+			String filename = "/tmp/" + UUID.randomUUID() + ".html";
+			FileWriter fw = new FileWriter(filename);
+			String inputString = IOUtils.toString(inputStream, "UTF-8");
+			fw.write(inputString);
+			fw.close();
+
+			return new File(filename);
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to save file for further processing.");
+		}
 	}
 }

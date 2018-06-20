@@ -26,22 +26,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ThymeleafHtmlRendererTest {
 
-	private ThymeleafHtmlRenderer renderer;
-
-	@Before
-	public void init() {
-		renderer = new ThymeleafHtmlRenderer();
-	}
-
-	@Test
-	public void properlyRendersJava8TimeDialect() {
-		String template = "<div th:text=\"${#temporals.format(time, 'YYYY-MM-dd HH:mm:ss')}\"></div>";
-		Map<String, Object> vars = ImmutableMap.of(
-				"time",
-				LocalDateTime.of(2012, 3, 15, 7, 3, 20)
-		);
-
-		assertThat(renderer.render(template, vars))
-				.isEqualTo("<div>2012-03-15 07:03:20</div>");
-	}
+//	private ThymeleafHtmlRenderer renderer;
+//
+//	@Before
+//	public void init() {
+//		renderer = new ThymeleafHtmlRenderer();
+//	}
+//
+//	@Test
+//	public void properlyRendersJava8TimeDialect() {
+//		String template = "<div th:text=\"${#temporals.format(time, 'YYYY-MM-dd HH:mm:ss')}\"></div>";
+//		Map<String, Object> vars = ImmutableMap.of(
+//				"time",
+//				LocalDateTime.of(2012, 3, 15, 7, 3, 20)
+//		);
+//
+//		assertThat(renderer.render(template, vars))
+//				.isEqualTo("<div>2012-03-15 07:03:20</div>");
+//	}
 }

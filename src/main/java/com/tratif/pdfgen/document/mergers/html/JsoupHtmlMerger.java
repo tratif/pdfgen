@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
-public class SimpleHtmlMerger implements HtmlMerger {
+public class JsoupHtmlMerger implements HtmlMerger {
 
 //	@Override
 //	public String merge(List<String> htmls) {

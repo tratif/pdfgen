@@ -1,8 +1,8 @@
 package com.tratif.pdfgen.document.docs;
 
-public class HtmlRenderedDocument extends RenderableDocument {
+public class HtmlDocument extends RenderableDocument {
 
-	public HtmlRenderedDocument(String filename) {
+	public HtmlDocument(String filename) {
 		super(filename);
 	}
 }

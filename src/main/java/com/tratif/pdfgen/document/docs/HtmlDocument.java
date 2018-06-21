@@ -32,6 +32,11 @@ public class HtmlDocument {
 		return file;
 	}
 
+	//todo verify if that is needed maybe File is enough	
+	public String location() {
+		return file.getAbsolutePath();
+	}
+
 	public InputStream asInputStream() throws FileNotFoundException {
 		if (!isNull(inputStream)) {
 			inputStream = new FileInputStream(file);

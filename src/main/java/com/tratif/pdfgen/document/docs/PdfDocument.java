@@ -12,6 +12,11 @@ public class PdfDocument {
 		this.file = file;
 	}
 
+	//todo verify if that is needed maybe File will be good to return as in HtmlDocument
+	public String location() {
+		return file.getAbsolutePath();
+	}
+
 	public byte[] toByteArray() {
 		try {
 			return Files.readAllBytes(file.toPath());

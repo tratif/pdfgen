@@ -29,6 +29,7 @@ import com.tratif.pdfgen.utils.FileNameGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -66,6 +67,10 @@ public class DocumentBuilder {
 		return renderParams;
 	}
 
+	public DocumentBuilder withParameters(Map<String, String> params) {
+		renderParams = new ParameterBuilder(params);
+		return this;
+	}
 
 	public PdfDocument toPdf() {
 		checkForEmptyPages();

@@ -22,6 +22,14 @@ public class ParameterBuilder {
 	private DocumentBuilder parentBuilder;
 	private Map<String, String> params;
 
+	public static ParameterBuilder parameters() {
+		return new ParameterBuilder(new HashMap<>());
+	}
+
+	ParameterBuilder(Map<String, String> params) {
+		this.params = params;
+	}
+
 	ParameterBuilder(DocumentBuilder parentBuilder) {
 		this.parentBuilder = parentBuilder;
 		this.params = new HashMap<>();

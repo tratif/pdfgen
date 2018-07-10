@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.renderers.html;
+package com.tratif.pdfgen.document.mergers.pdf;
 
 import com.tratif.pdfgen.document.docs.HtmlDocument;
 import com.tratif.pdfgen.document.mergers.html.JsoupHtmlMerger;

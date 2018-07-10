@@ -50,7 +50,6 @@ public class PDF {
 
 		try {
 			Utils.writeStreamToFile(destination, content);
-//            FileUtils.copyToFile(content, destination);
 		} catch (IOException e) {
 			throw new RuntimeException("Failed saving to file.", e);
 		}

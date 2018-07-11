@@ -24,12 +24,14 @@ import java.io.StringReader;
 
 import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
 
-public class DocumentTest {
+public class PdfGenerationBlackBoxTest {
 
 	@Test
 	public void pdfHasProperContentFromString() {
 		String html = "<h1>Hello world</h1>";
-		assertThat(Document.fromStaticHtml(html).and().toPdf().toByteArray())
+		byte[] pdfDocument = Document.fromStaticHtml(html).and().toPdf().toByteArray();
+
+		assertThat(pdfDocument)
 				.contains("Hello")
 				.contains("world");
 	}
@@ -37,7 +39,9 @@ public class DocumentTest {
 	@Test
 	public void pdfHasProperContentFromInputStream() {
 		InputStream inputStream = new ByteArrayInputStream("<h1>Hello world</h1>".getBytes());
-		assertThat(Document.fromStaticHtml(inputStream).and().toPdf().toByteArray())
+		byte[] pdfDocument = Document.fromStaticHtml(inputStream).and().toPdf().toByteArray();
+
+		assertThat(pdfDocument)
 				.contains("Hello")
 				.contains("world");
 	}
@@ -45,7 +49,9 @@ public class DocumentTest {
 	@Test
 	public void pdfHasProperContentFromReader() {
 		Reader reader = new StringReader("<h1>Hello world</h1>");
-		assertThat(Document.fromStaticHtml(reader).and().toPdf().toByteArray())
+		byte[] pdfDocument = Document.fromStaticHtml(reader).and().toPdf().toByteArray();
+
+		assertThat(pdfDocument)
 				.contains("Hello")
 				.contains("world");
 	}

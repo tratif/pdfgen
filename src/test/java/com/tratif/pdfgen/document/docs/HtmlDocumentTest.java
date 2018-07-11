@@ -20,6 +20,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,9 +30,9 @@ public class HtmlDocumentTest {
 	@Test
 	public void whenCreatedWithFileThenProperlyReturnsInputStream() throws IOException {
 		File file = createTempFile();
-		HtmlDocument htmlDocument = new HtmlDocument(file);
+		InputStream htmlDocument = new HtmlDocument(file).asInputStream();
 
-		assertThat(htmlDocument.asInputStream())
+		assertThat(htmlDocument)
 				.isNotNull();
 	}
 
@@ -40,9 +41,9 @@ public class HtmlDocumentTest {
 		File file = createTempFile();
 		FileInputStream fis = new FileInputStream(file);
 
-		HtmlDocument htmlDocument = new HtmlDocument(fis);
+		File htmlDocument = new HtmlDocument(fis).asFile();
 
-		assertThat(htmlDocument.asFile())
+		assertThat(htmlDocument)
 				.exists();
 	}
 
@@ -52,7 +53,9 @@ public class HtmlDocumentTest {
 		File file = createTempFile();
 		Files.write(file.toPath(), html.getBytes());
 
-		assertThat(new HtmlDocument(file).toString())
+		String htmlDocument = new HtmlDocument(file).toString();
+
+		assertThat(htmlDocument)
 				.isEqualTo(html);
 	}
 

@@ -29,11 +29,11 @@ public class PdfDocumentTest {
 
 	@Test
 	public void containsProperData() {
-		PdfDocument pdf = Document.fromStaticHtml("<h1>First page</h1>")
+		byte[] pdf = Document.fromStaticHtml("<h1>First page</h1>")
 				.and()
-				.toPdf();
+				.toPdf().toByteArray();
 
-		assertThat(pdf.toByteArray())
+		assertThat(pdf)
 				.isProperPdfFile()
 				.contains("First")
 				.contains("page");

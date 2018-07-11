@@ -39,7 +39,8 @@ public class HtmlTemplateTest {
 		InputStream inputStream = new ByteArrayInputStream("test".getBytes());
 		HtmlTemplate template = new HtmlTemplate(inputStream, new HashMap<>());
 
-		assertThat(Files.readAllLines(template.asFile().toPath()).get(0))
+		String documentContent = Files.readAllLines(template.asFile().toPath()).get(0);
+		assertThat(documentContent)
 				.isEqualTo("test");
 	}
 

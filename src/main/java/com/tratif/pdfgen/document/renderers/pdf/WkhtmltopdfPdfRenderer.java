@@ -23,7 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 public class WkhtmltopdfPdfRenderer implements PdfRenderer {
 
@@ -31,12 +35,17 @@ public class WkhtmltopdfPdfRenderer implements PdfRenderer {
 
 	@Override
 	public PdfDocument render(HtmlDocument document, File destination, Map<String, String> renderParams) {
+		return render(singletonList(document), destination, renderParams);
+	}
+
+	@Override
+	public PdfDocument render(List<HtmlDocument> documents, File destination, Map<String, String> renderParams) {
 		try {
 			CommandLineExecutor executor = new CommandLineExecutor();
 			Process process = executor.command("wkhtmltopdf")
 					.withArgument("--encoding utf-8")
 					.withArguments(renderParams)
-					.withArgument(document.asFile().getPath())
+					.withArguments(documents.stream().map(doc -> doc.asFile().getPath()).collect(toList()))
 					.withArgument(destination.getPath())
 					.execute();
 

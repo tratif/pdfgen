@@ -52,7 +52,7 @@ public class HtmlDocumentTest {
 		File file = createTempFile();
 		Files.write(file.toPath(), html.getBytes());
 
-		assertThat(new HtmlDocument(file).asString())
+		assertThat(new HtmlDocument(file).toString())
 				.isEqualTo(html);
 	}
 

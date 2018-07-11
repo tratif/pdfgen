@@ -47,6 +47,19 @@ class CommandLineExecutor {
 		return this;
 	}
 
+	CommandLineExecutor withArguments(List<String> args) {
+		this.args.addAll(args);
+		return this;
+	}
+
+	CommandLineExecutor withArguments(Map<String, String> properties) {
+		properties.entrySet().stream()
+				.map(this::formatOptionalArgument)
+				.forEach(args::add);
+
+		return this;
+	}
+
 	Process execute() {
 		Runtime runtime = Runtime.getRuntime();
 		StringJoiner joiner = new StringJoiner(" ");
@@ -59,14 +72,6 @@ class CommandLineExecutor {
 		} catch (IOException e) {
 			throw new PdfgenException("Running command has failed.", e);
 		}
-	}
-
-	CommandLineExecutor withArguments(Map<String, String> properties) {
-		properties.entrySet().stream()
-				.map(this::formatOptionalArgument)
-				.forEach(args::add);
-
-		return this;
 	}
 
 	private String formatOptionalArgument(Map.Entry<String, String> entry) {

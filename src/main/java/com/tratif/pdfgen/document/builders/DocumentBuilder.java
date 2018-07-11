@@ -80,9 +80,9 @@ public class DocumentBuilder {
 
 		File destination = createTempFile();
 
-		HtmlDocument htmlDocument = toHtml();
+		List<HtmlDocument> htmlDocuments = renderPages();
 		return pdfRenderer.render(
-				htmlDocument,
+				htmlDocuments,
 				destination,
 				renderParams.build()
 		);

@@ -62,7 +62,8 @@ public class HtmlDocument {
 		return inputStream;
 	}
 
-	public String asString() {
+	@Override
+	public String toString() {
 		if (isNull(file)) {
 			try {
 				return IOUtils.toString(inputStream, "UTF-8");

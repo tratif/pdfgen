@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document.renderers;
-
-import com.tratif.pdfgen.document.docs.HtmlDocument;
-import com.tratif.pdfgen.document.docs.PdfDocument;
+package com.tratif.pdfgen.asserts.helpers;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.nio.file.Files;
 
-public interface PdfRenderer {
+public class TestUtils {
 
-	PdfDocument render(HtmlDocument document, File destination, Map<String, String> renderParams);
-
-	PdfDocument render(List<HtmlDocument> documents, File destination, Map<String, String> renderParams);
+	public static File asFile(String content) throws IOException {
+		File file = Files.createTempFile("pdfgen-test", "").toFile();
+		Files.write(file.toPath(), content.getBytes());
+		file.deleteOnExit();
+		return file;
+	}
 }

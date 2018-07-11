@@ -15,18 +15,14 @@
  */
 package com.tratif.pdfgen.document;
 
-import com.google.common.collect.ImmutableMap;
-import com.tratif.pdfgen.asserts.helpers.SimpleParameter;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Map;
 
 import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
-
 
 public class DocumentTest {
 
@@ -52,15 +48,5 @@ public class DocumentTest {
 		assertThat(Document.fromStaticHtml(reader).and().toPdf().toByteArray())
 				.contains("Hello")
 				.contains("world");
-	}
-
-	@Test
-	public void parametersAreBoundToHtmlTemplate() {
-		Map<String, Object> args = ImmutableMap.of("text", new SimpleParameter("myContent"));
-		String htmlTemplate = "<h1>First page</h1><p th:text=\"${text.content}\"></p>";
-
-		assertThat(Document.fromHtmlTemplate(htmlTemplate, args).and().toPdf().toByteArray())
-				.isProperPdfFile()
-				.contains("myContent");
 	}
 }

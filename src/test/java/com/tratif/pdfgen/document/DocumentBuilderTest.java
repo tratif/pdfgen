@@ -24,6 +24,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
@@ -56,60 +59,50 @@ public class DocumentBuilderTest {
 				.toPdf().toByteArray();
 
 		assertThat(pdf)
-				.contains("This")
-				.contains("first")
-				.contains("page");
+				.contains("This is first page");
 	}
 
 	@Test
 	public void rendersPdfWithMultiplePages() {
 		byte[] pdf = Document.withPage()
 				.fromStaticHtml("<h1>Title</h1>")
-					.withTemplateEngine(HtmlTemplateEngine.FREEMARKER)
 				.and()
 				.withPage()
 				.fromStaticHtml("<p>Second page</p>")
-					.withTemplateEngine(HtmlTemplateEngine.FREEMARKER)
 				.and()
 				.toPdf().toByteArray();
 
 		assertThat(pdf)
+				.hasPagesCount(2)
 				.contains("Title")
-				.contains("Second")
-				.contains("page");
+				.contains("Second page");
 	}
 
 	@Test
 	public void rendersPdfWithMultiplePagesAndParameters() {
 		byte[] pdfDocument = Document.withPage()
-				.fromStaticHtml("<h1>Title</h1>")
+					.fromHtmlTemplate(
+							"<h1 th:text=\"${variable}\"></h1>",
+							ImmutableMap.of("variable", "First page")
+					)
+					.withTemplateEngine(HtmlTemplateEngine.THYMELEAF)
+				.and().withPage()
+					.fromHtmlTemplate(
+							"<p th:text=\"${variable}\"></p>",
+							ImmutableMap.of("variable", "Second one")
+					)
+					.withTemplateEngine(HtmlTemplateEngine.THYMELEAF)
+				.and().withParameters()
+					.noBackground()
+					.a4()
 				.and()
-				.withPage()
-				.fromStaticHtml("<p>Second page</p>")
-				.and()
-				.withParameters()
-				.noBackground()
-				.a4()
-				.and()
-				.toPdf().toByteArray();
+					.toPdf()
+					.toByteArray();
 
 		assertThat(pdfDocument)
-				.contains("Title")
-				.contains("Second")
-				.contains("page");
-	}
-
-	@Test
-	public void bindsParametersToSingleHtmlTemplate() {
-		Map<String, Object> params = ImmutableMap.of("testObject", new SimpleParameter("testContent"));
-
-		byte[] pdf = Document.withPage()
-				.fromHtmlTemplate("<html><head></head><body><span th:text=\"${testObject.content}\">TEST</span></body></html>", params)
-				.and()
-				.toPdf().toByteArray();
-
-		assertThat(pdf)
-				.contains("testContent");
+				.hasPagesCount(2)
+				.contains("First page")
+				.contains("Second one");
 	}
 
 	@Test

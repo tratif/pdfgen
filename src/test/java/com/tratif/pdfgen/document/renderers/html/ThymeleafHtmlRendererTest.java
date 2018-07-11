@@ -16,6 +16,7 @@
 package com.tratif.pdfgen.document.renderers.html;
 
 import com.google.common.collect.ImmutableMap;
+import com.tratif.pdfgen.asserts.helpers.SimpleParameter;
 import com.tratif.pdfgen.document.docs.HtmlTemplate;
 import com.tratif.pdfgen.utils.ToFileConverter;
 import org.junit.Before;
@@ -27,7 +28,8 @@ import java.io.Writer;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import static com.tratif.pdfgen.asserts.helpers.TestUtils.asFile;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ThymeleafHtmlRendererTest {
 
@@ -53,5 +55,18 @@ public class ThymeleafHtmlRendererTest {
 		renderer.render(htmlTemplate, writer);
 		assertThat(writer.toString())
 				.isEqualTo("<div>2012-03-15 07:03:20</div>");
+	}
+
+	@Test
+	public void bindsParametersToThymeleafHtmlTemplate() throws IOException {
+		String template = "<html><head></head><body><span th:text=\"${testObject.content}\"></span></body></html>";
+		Map<String, Object> params = ImmutableMap.of("testObject", new SimpleParameter("testContent"));
+
+		HtmlTemplate htmlTemplate = new HtmlTemplate(asFile(template), params);
+		StringWriter sw = new StringWriter();
+		renderer.render(htmlTemplate, sw);
+
+		assertThat(sw.toString())
+				.contains("testContent");
 	}
 }

@@ -93,19 +93,6 @@ public class DocumentBuilderTest {
 				.and()
 				.toPdf().toByteArray();
 
-//		byte[] pdf = Document.withPage()
-//				.fromHtmlTemplate("<span th:text=\"${testObject.content}\">TEST</span>", params)
-//				.and()
-//				.withPage()
-//				.fromHtmlTemplate("<p th:text=\"${testObject2.content}\">TEST</p>", params)
-//				.and()
-//				.withParameters()
-//				.zoom(2)
-//				.landscape()
-//				.grayscale()
-//				.and()
-//				.toPdf().toByteArray();
-
 		assertThat(pdfDocument)
 				.contains("Title")
 				.contains("Second")
@@ -117,7 +104,7 @@ public class DocumentBuilderTest {
 		Map<String, Object> params = ImmutableMap.of("testObject", new SimpleParameter("testContent"));
 
 		byte[] pdf = Document.withPage()
-				.fromHtmlTemplate("<span th:text=\"${testObject.content}\">TEST</span>", params)
+				.fromHtmlTemplate("<html><head></head><body><span th:text=\"${testObject.content}\">TEST</span></body></html>", params)
 				.and()
 				.toPdf().toByteArray();
 

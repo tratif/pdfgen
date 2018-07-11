@@ -16,6 +16,7 @@
 package com.tratif.pdfgen.asserts;
 
 import com.tratif.pdfgen.asserts.helpers.PDFContentProvider;
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 
@@ -141,7 +142,7 @@ public class PdfAssert extends AbstractAssert<PdfAssert, byte[]> {
 			file = File.createTempFile(TEMP_FILE_PREFIX, ".pdf");
 			Files.write(file.toPath(), actual);
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to withPage temp file or write to it.", e);
+			throw new PdfgenException("Failed to withPage temp file or write to it.", e);
 		}
 
 		return file;

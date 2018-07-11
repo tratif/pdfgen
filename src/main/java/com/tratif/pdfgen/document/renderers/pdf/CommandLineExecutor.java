@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.helpers;
+package com.tratif.pdfgen.document.renderers.pdf;
 
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,29 +25,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public class CommandLineExecutor {
+class CommandLineExecutor {
 
 	private static final Logger log = LoggerFactory.getLogger(CommandLineExecutor.class);
 
 	private String cmd;
 	private List<String> args;
 
-	public CommandLineExecutor() {
+	CommandLineExecutor() {
 		args = new ArrayList<>();
 	}
 
-	public CommandLineExecutor command(String cmd) {
+	CommandLineExecutor command(String cmd) {
 		args = new ArrayList<>();
 		this.cmd = cmd;
 		return this;
 	}
 
-	public CommandLineExecutor withArgument(String arg) {
+	CommandLineExecutor withArgument(String arg) {
 		args.add(arg);
 		return this;
 	}
 
-	public Process execute() {
+	Process execute() {
 		Runtime runtime = Runtime.getRuntime();
 		StringJoiner joiner = new StringJoiner(" ");
 		joiner.add(cmd);
@@ -56,12 +57,11 @@ public class CommandLineExecutor {
 			log.debug("Running command: {}", command);
 			return runtime.exec(command);
 		} catch (IOException e) {
-			log.error("Running command has failed.");
-			throw new RuntimeException("Running command has failed.", e);
+			throw new PdfgenException("Running command has failed.", e);
 		}
 	}
 
-	public CommandLineExecutor withArguments(Map<String, String> properties) {
+	CommandLineExecutor withArguments(Map<String, String> properties) {
 		properties.entrySet().stream()
 				.map(this::formatOptionalArgument)
 				.forEach(args::add);

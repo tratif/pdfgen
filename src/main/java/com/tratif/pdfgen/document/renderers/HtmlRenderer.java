@@ -21,9 +21,5 @@ import java.io.Writer;
 
 public interface HtmlRenderer {
 
-//	String render(String htmlTemplate, Map<String, Object> params);
-//
-//	void render(String templateName, Map<String, Object> params, FileWriter fileWriter);
-
 	void render(HtmlTemplate page, Writer writer);
 }

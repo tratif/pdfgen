@@ -19,6 +19,7 @@ import com.tratif.pdfgen.document.docs.HtmlDocument;
 import com.tratif.pdfgen.document.docs.HtmlTemplate;
 import com.tratif.pdfgen.document.parsers.ToInputStreamParser;
 import com.tratif.pdfgen.document.renderers.html.HtmlTemplateEngine;
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import com.tratif.pdfgen.utils.ToFileConverter;
 
 import java.io.File;
@@ -33,7 +34,6 @@ import static java.util.Objects.isNull;
 
 public class PageBuilder {
 
-	// TODO: 6/20/18 move parameters to DocumentBuilder
 	private DocumentBuilder parentBuilder;
 	private HtmlDocument htmlDocument;
 	private HtmlTemplate htmlTemplate;
@@ -64,7 +64,7 @@ public class PageBuilder {
 			File file = ToFileConverter.convert(html, "html");
 			return fromStaticHtml(file);
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to save template to file for further processing.");
+			throw new PdfgenException("Failed to save template to file for further processing.", e);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class PageBuilder {
 					params
 			);
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to save template to file for further processing.");
+			throw new PdfgenException("Failed to save template to file for further processing.", e);
 		}
 	}
 

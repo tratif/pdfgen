@@ -22,7 +22,7 @@ import java.nio.file.Files;
 public class ToFileConverter {
 
 	public static File convert(String content, String fileExtension) throws IOException {
-		File file = FileNameGenerator.asFile(fileExtension);
+		File file = Files.createTempFile("pdfgen", "." + fileExtension).toFile();
 		Files.write(file.toPath(), content.getBytes());
 		return file;
 	}

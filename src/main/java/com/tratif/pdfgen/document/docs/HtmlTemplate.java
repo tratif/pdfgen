@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,10 +15,10 @@
  */
 package com.tratif.pdfgen.document.docs;
 
-import com.tratif.pdfgen.utils.FileNameGenerator;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Map;
 
 import static java.util.Objects.isNull;
@@ -41,7 +41,7 @@ public class HtmlTemplate {
 
 	public File asFile() throws IOException {
 		if (isNull(file)) {
-			file = FileNameGenerator.asFile("html");
+			file = Files.createTempFile("pdfgen", ".pdf").toFile();
 			FileUtils.copyInputStreamToFile(inputStream, file);
 		}
 
@@ -49,7 +49,7 @@ public class HtmlTemplate {
 	}
 
 	public InputStream asInputStream() throws FileNotFoundException {
-		if (!isNull(inputStream)) {
+		if (isNull(inputStream)) {
 			inputStream = new FileInputStream(file);
 		}
 

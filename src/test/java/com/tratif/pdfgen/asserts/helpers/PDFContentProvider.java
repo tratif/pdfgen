@@ -15,6 +15,7 @@
  */
 package com.tratif.pdfgen.asserts.helpers;
 
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
@@ -50,9 +51,9 @@ public class PDFContentProvider implements Closeable {
 			parser.parse();
 			document = new PDDocument(parser.getDocument());
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException("File was not found.", e);
+			throw new PdfgenException("File was not found.", e);
 		} catch (IOException e) {
-			throw new RuntimeException("Error while reading or parsing file.", e);
+			throw new PdfgenException("Error while reading or parsing file.", e);
 		}
 	}
 
@@ -97,7 +98,7 @@ public class PDFContentProvider implements Closeable {
 
 			return textStripper.getText(document);
 		} catch (IOException e) {
-			throw new RuntimeException("Error while reading file.", e);
+			throw new PdfgenException("Error while reading file.", e);
 		}
 	}
 
@@ -110,7 +111,7 @@ public class PDFContentProvider implements Closeable {
 		try {
 			document.close();
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to close the file.", e);
+			throw new PdfgenException("Failed to close the file.", e);
 		}
 	}
 }

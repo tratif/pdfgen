@@ -16,6 +16,7 @@
 package com.tratif.pdfgen.document.mergers.html;
 
 import com.tratif.pdfgen.document.docs.HtmlDocument;
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import com.tratif.pdfgen.utils.ToFileConverter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -49,7 +50,7 @@ public class JsoupHtmlMerger implements HtmlMerger {
 					ToFileConverter.convert(base.html(), "html")
 			);
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to save template file");
+			throw new PdfgenException("Failed to save template file", e);
 		}
 	}
 
@@ -57,9 +58,9 @@ public class JsoupHtmlMerger implements HtmlMerger {
 		return pages.stream()
 				.map(html -> {
 					try {
-						return new String(Files.readAllBytes(Paths.get(html.asFile().getPath())), "UTF-8");
+						return new String(Files.readAllBytes(html.asFile().toPath()), "UTF-8");
 					} catch (IOException e) {
-						throw new RuntimeException("Failed to load file");
+						throw new PdfgenException("Failed to load file", e);
 					}
 				})
 				.collect(toList());

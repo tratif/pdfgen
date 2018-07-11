@@ -17,6 +17,7 @@ package com.tratif.pdfgen.document.renderers.html;
 
 import com.tratif.pdfgen.document.docs.HtmlTemplate;
 import com.tratif.pdfgen.document.renderers.HtmlRenderer;
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -34,7 +35,6 @@ public class FreeMarkerHtmlRenderer implements HtmlRenderer {
 
 	private Configuration configuration;
 
-	// TODO: 6/22/18 implement own template loader to resolver both relative and absolute paths
 	public FreeMarkerHtmlRenderer() {
 		configuration = new Configuration(Configuration.VERSION_2_3_20);
 		configuration.setDefaultEncoding("UTF-8");
@@ -44,12 +44,10 @@ public class FreeMarkerHtmlRenderer implements HtmlRenderer {
 	@Override
 	public void render(HtmlTemplate page, Writer writer) {
 		try {
-			//todo make it configurable - freemarker is not able to read templates in custom locations in test scope
-			//			configuration.setTemplateLoader(new FileTemplateLoader(new File("/opt/tascent/reports/templates/")));
 			Template template = configuration.getTemplate(page.asFile().getPath());
 			template.process(page.getParams(), writer);
 		} catch (IOException | TemplateException e) {
-			throw new RuntimeException("Error while rendering html.", e);
+			throw new PdfgenException("Error while rendering html.", e);
 		}
 	}
 }

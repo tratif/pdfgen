@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,21 +15,16 @@
  */
 package com.tratif.pdfgen.document.docs;
 
-import com.tratif.pdfgen.utils.FileNameGenerator;
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.StringJoiner;
 
 import static java.util.Objects.isNull;
 
 public class HtmlDocument {
-
-	private static final Logger log = LoggerFactory.getLogger(HtmlDocument.class);
 
 	private File file;
 	private InputStream inputStream;
@@ -44,28 +39,23 @@ public class HtmlDocument {
 
 	public File asFile() {
 		if (isNull(file)) {
-			file = FileNameGenerator.asFile("html");
 			try {
+				file = Files.createTempFile("pdfgen", ".html").toFile();
 				FileUtils.copyInputStreamToFile(inputStream, file);
 			} catch (IOException e) {
-				log.error("Failed to copy input stream to file.");
+				throw new PdfgenException("Failed creating file from input stream.", e);
 			}
 		}
 
 		return file;
 	}
 
-	//todo verify if that is needed maybe File is enough
-	public String location() {
-		return file.getAbsolutePath();
-	}
-
 	public InputStream asInputStream() {
-		if (!isNull(inputStream)) {
+		if (isNull(inputStream)) {
 			try {
 				inputStream = new FileInputStream(file);
 			} catch (FileNotFoundException e) {
-				log.error("Failed to open file.");
+				throw new PdfgenException("Failed to open file.", e);
 			}
 		}
 
@@ -77,20 +67,14 @@ public class HtmlDocument {
 			try {
 				return IOUtils.toString(inputStream, "UTF-8");
 			} catch (IOException e) {
-				log.error("Failed to read input stream.");
-				return null;
+				throw new PdfgenException("Failed to read input stream.", e);
 			}
 		}
 
-		StringJoiner sj = new StringJoiner("");
-
 		try {
-			Files.readAllLines(file.toPath()).forEach(sj::add);
+			return new String(Files.readAllBytes(file.toPath()), "UTF-8");
 		} catch (IOException e) {
-			log.error("Failed to read file.");
-			return null;
+			throw new PdfgenException("Failed to read file.", e);
 		}
-
-		return sj.toString();
 	}
 }

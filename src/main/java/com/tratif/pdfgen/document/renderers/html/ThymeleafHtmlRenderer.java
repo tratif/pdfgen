@@ -17,6 +17,7 @@ package com.tratif.pdfgen.document.renderers.html;
 
 import com.tratif.pdfgen.document.docs.HtmlTemplate;
 import com.tratif.pdfgen.document.renderers.HtmlRenderer;
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
@@ -45,7 +46,7 @@ public class ThymeleafHtmlRenderer implements HtmlRenderer {
 		try {
 			templateEngine.process(page.asFile().getPath(), context, writer);
 		} catch (IOException e) {
-			throw new RuntimeException("Error while parsing template");
+			throw new PdfgenException("Error while parsing template", e);
 		}
 	}
 }

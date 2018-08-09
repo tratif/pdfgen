@@ -15,7 +15,9 @@
  */
 package com.tratif.pdfgen.document;
 
+import com.tratif.pdfgen.document.renderers.html.HtmlTemplateEngine;
 import org.junit.Test;
+import org.thymeleaf.TemplateEngine;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -29,7 +31,10 @@ public class PdfGenerationBlackBoxTest {
 	@Test
 	public void pdfHasProperContentFromString() {
 		String html = "<h1>Hello world</h1>";
-		byte[] pdfDocument = Document.fromStaticHtml(html).and().toPdf().toByteArray();
+		byte[] pdfDocument = Document.fromStaticHtml(html)
+				.and()
+				.toPdf()
+				.toByteArray();
 
 		assertThat(pdfDocument)
 				.contains("Hello")
@@ -39,7 +44,10 @@ public class PdfGenerationBlackBoxTest {
 	@Test
 	public void pdfHasProperContentFromInputStream() {
 		InputStream inputStream = new ByteArrayInputStream("<h1>Hello world</h1>".getBytes());
-		byte[] pdfDocument = Document.fromStaticHtml(inputStream).and().toPdf().toByteArray();
+		byte[] pdfDocument = Document.fromStaticHtml(inputStream)
+				.and()
+				.toPdf()
+				.toByteArray();
 
 		assertThat(pdfDocument)
 				.contains("Hello")
@@ -49,10 +57,16 @@ public class PdfGenerationBlackBoxTest {
 	@Test
 	public void pdfHasProperContentFromReader() {
 		Reader reader = new StringReader("<h1>Hello world</h1>");
-		byte[] pdfDocument = Document.fromStaticHtml(reader).and().toPdf().toByteArray();
+		byte[] pdfDocument = Document.fromStaticHtml(reader)
+				.and()
+				.toPdf()
+				.toByteArray();
 
 		assertThat(pdfDocument)
 				.contains("Hello")
 				.contains("world");
+
+		Document.fromHtmlTemplate("123")
+				.
 	}
 }

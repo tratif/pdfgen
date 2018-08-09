@@ -1,8 +1,7 @@
-v0.0.1
+v0.0.1 NOT RELEASED
 ============
 
 * introduced static HTML to PDF conversion
-* introduced HTML Thymeleaf templates to PDF conversion
-* introduced HTML Thymeleaf templates to HTML conversion (binding parameters)
 * introduced multiple page support
 * introduced temporal formatting in templates
+* introduced Thymeleaf and FreeMarker template engines rendering both to PDF and HTML

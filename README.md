@@ -14,8 +14,10 @@ Basic usage
 The following call will convert the provided HTML document and produce a PDF file: 
 
 ```java
-byte[] pdf = Document.fromStaticHtml(html)
-                        .toPdf();
+byte[] pdfDocument = Document.fromStaticHtml(html)
+                             .and()
+                             .toPdf()
+                             .toByteArray();
 ```
 
 where `html` can be one of: `String`, `InputStream`, `Reader`, `URL`, `File`, `Path`. 
@@ -43,41 +45,71 @@ It is possible to customize the generated PDF using the following parameters:
 
 The following call will set portrait orientation, left margin, right margin and grayscale:
 ```java
-DocumentBuilder document = Document.fromStaticHtml(html);
-document.parameters()
-    .portrait()
-    .marginLeft("2cm")
-    .marginRight("2cm")
-    .grayscale();
-byte[] pdf = db.toPdf();
+Document.fromStaticHtml("<html>")
+        .and()
+        .withParameters()
+            .portrait()
+            .marginLeft("2cm")
+            .marginRight("2cm")
+            .grayscale()
+        .and()
+        .toPdf();
 ```
 
 Thymeleaf templates
 ---------------
 
+**Thymeleaf is default templating engine.**
+
 * [Thymeleaf webpage](https://www.thymeleaf.org/index.html)
 * [Thymeleaf documentation](https://www.thymeleaf.org/documentation.html)
 * [Thymeleaf GitHub](https://github.com/thymeleaf)
 
-Working with Thymeleaf templates is as easy as with static html. All you have to do is call a proper method:
+Working with template engines is as easy as with static html. All you have to do is call a proper method:
 ```java
-DocumentBuilder document = Document.fromHtmlTemplate(htmlTemplate, args)
-document.parameters()
-    .portrait()
-    .marginLeft("2cm")
-    .marginRight("2cm")
-    .grayscale()
-byte[] pdf = db.toPdf();
+Document.fromHtmlTemplate(template, params)
+        .withTemplateEngine(HtmlTemplateEngine.THYMELEAF)
+        .and()
+        .withParameters()
+            .portrait()
+            .marginLeft("2cm")
+            .marginRight("2cm")
+            .grayscale()
+        .and()
+        .toPdf();
 ```
 
 where `args` is a `Map<String, Object>` object. It is used as typical Thymeleaf parameters.
 
+FreeMarker templates
+---------------
+
+* [FreeMarker webpage](https://freemarker.apache.org/)
+* [FreeMarker documentation](https://freemarker.apache.org/docs/index.html)
+* [FreeMarker GitHub](https://github.com/apache/freemarker)
+
+You can also use FreeMarker templates.
+
+```java
+Document.fromHtmlTemplate(template, params)
+        .withTemplateEngine(HtmlTemplateEngine.FreeMarker)
+        .and()
+        .withParameters()
+            .portrait()
+            .marginLeft("2cm")
+            .marginRight("2cm")
+            .grayscale()
+        .and()
+        .toPdf();
+```
+
 ### Producing HTML from templates ###
 
-It is also possible to use `pdfgen` as simple Thymeleaf parsing engine:
+It is also possible to use `pdfgen` as template parsing engine:
 ```java
-String parsedHtml = Document.fromHtmlTemplate(htmlTemplate, args)
-                      .toHtml();
+HtmlDocument parsedHtml = Document.fromHtmlTemplate(template, params)
+                                  .and()
+                                  .toHtml();
 ```
 
 Java8TimeDialect

@@ -15,15 +15,16 @@
  */
 package com.tratif.pdfgen.asserts.helpers;
 
-public class SimpleParameter {
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
-	private String content;
+public class TestUtils {
 
-	public SimpleParameter(String content) {
-		this.content = content;
-	}
-
-	public String getContent() {
-		return content;
+	public static File asFile(String content) throws IOException {
+		File file = Files.createTempFile("pdfgen-test", "").toFile();
+		Files.write(file.toPath(), content.getBytes());
+		file.deleteOnExit();
+		return file;
 	}
 }

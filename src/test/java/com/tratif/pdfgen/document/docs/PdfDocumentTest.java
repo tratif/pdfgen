@@ -13,17 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.document;
+package com.tratif.pdfgen.document.docs;
 
+import com.tratif.pdfgen.document.Document;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
 
-public class PDFTest {
+import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+public class PdfDocumentTest {
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
+
+	@Test
+	public void containsProperData() {
+		byte[] pdf = Document.fromStaticHtml("<h1>First page</h1>")
+				.and()
+				.toPdf().toByteArray();
+
+		assertThat(pdf)
+				.isProperPdfFile()
+				.contains("First")
+				.contains("page");
+	}
 }

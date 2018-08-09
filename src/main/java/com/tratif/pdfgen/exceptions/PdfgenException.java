@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.exceptions;
 
-public class SimpleParameter {
+public class PdfgenException extends RuntimeException {
 
-	private String content;
-
-	public SimpleParameter(String content) {
-		this.content = content;
+	public PdfgenException() {
+		super();
 	}
 
-	public String getContent() {
-		return content;
+	public PdfgenException(String s) {
+		super(s);
+	}
+
+	public PdfgenException(String s, Throwable throwable) {
+		super(s, throwable);
+	}
+
+	public PdfgenException(Throwable throwable) {
+		super(throwable);
 	}
 }

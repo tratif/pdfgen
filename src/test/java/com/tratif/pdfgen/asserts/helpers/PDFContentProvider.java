@@ -15,6 +15,7 @@
  */
 package com.tratif.pdfgen.asserts.helpers;
 
+import com.tratif.pdfgen.exceptions.PdfgenException;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
@@ -36,80 +37,81 @@ import java.util.List;
 
 public class PDFContentProvider implements Closeable {
 
-    private File file;
-    private PDDocument document;
+	private File file;
+	private PDDocument document;
 
-    public PDFContentProvider(File file) {
-        this.file = file;
-        initialize();
-    }
+	public PDFContentProvider(File file) {
+		this.file = file;
+		initialize();
+	}
 
-    private void initialize() {
-        try {
-            PDFParser parser = new PDFParser(new RandomAccessFile(file, "r"));
-            parser.parse();
-            document = new PDDocument(parser.getDocument());
-        } catch(FileNotFoundException e) {
-            throw new RuntimeException("File was not found.", e);
-        } catch(IOException e) {
-            throw new RuntimeException("Error while reading or parsing file.", e);
-        }
-    }
+	private void initialize() {
+		try {
+			PDFParser parser = new PDFParser(new RandomAccessFile(file, "r"));
+			parser.parse();
+			document = new PDDocument(parser.getDocument());
+		} catch (FileNotFoundException e) {
+			throw new PdfgenException("File was not found.", e);
+		} catch (IOException e) {
+			throw new PdfgenException("Error while reading or parsing file.", e);
+		}
+	}
 
-    public List<BufferedImage> getAllImages() {
-        List<BufferedImage> images = new ArrayList<>();
+	public List<BufferedImage> getAllImages() {
+		List<BufferedImage> images = new ArrayList<>();
 
-        for(PDPage page : document.getPages()) {
-            images.addAll(getImagesFromResources(page.getResources()));
-        }
+		for (PDPage page : document.getPages()) {
+			images.addAll(getImagesFromResources(page.getResources()));
+		}
 
-        return images;
-    }
+		return images;
+	}
 
-    private List<BufferedImage> getImagesFromResources(PDResources resources) {
-        List<BufferedImage> images = new ArrayList<>();
+	private List<BufferedImage> getImagesFromResources(PDResources resources) {
+		List<BufferedImage> images = new ArrayList<>();
 
-        try {
-            for (COSName xObjectName : resources.getXObjectNames()) {
-                PDXObject xObject = resources.getXObject(xObjectName);
+		try {
+			for (COSName xObjectName : resources.getXObjectNames()) {
+				PDXObject xObject = resources.getXObject(xObjectName);
 
-                if (xObject instanceof PDFormXObject) {
-                    images.addAll(getImagesFromResources(((PDFormXObject) xObject).getResources()));
-                } else if (xObject instanceof PDImageXObject) {
-                    images.add(((PDImageXObject) xObject).getImage());
-                }
-            }
-        } catch(IOException e) { }
+				if (xObject instanceof PDFormXObject) {
+					images.addAll(getImagesFromResources(((PDFormXObject) xObject).getResources()));
+				} else if (xObject instanceof PDImageXObject) {
+					images.add(((PDImageXObject) xObject).getImage());
+				}
+			}
+		} catch (IOException e) {
+		}
 
-        return images;
-    }
+		return images;
+	}
 
-    public String getText() {
-        return getText(1, document.getNumberOfPages());
-    }
+	public String getText() {
+		return getText(1, document.getNumberOfPages());
+	}
 
-    public String getText(int fromPage, int toPage) {
-        try {
-            PDFTextStripper textStripper = new PDFTextStripper();
-            textStripper.setStartPage(fromPage);
-            textStripper.setEndPage(toPage);
+	public String getText(int fromPage, int toPage) {
+		try {
+			PDFTextStripper textStripper = new PDFTextStripper();
+			textStripper.setStartPage(fromPage);
+			textStripper.setEndPage(toPage);
 
-            return textStripper.getText(document);
-        } catch(IOException e) {
-            throw new RuntimeException("Error while reading file.", e);
-        }
-    }
+			return textStripper.getText(document);
+		} catch (IOException e) {
+			throw new PdfgenException("Error while reading file.", e);
+		}
+	}
 
-    public int getPagesCount() {
-        return document.getNumberOfPages();
-    }
+	public int getPagesCount() {
+		return document.getNumberOfPages();
+	}
 
-    @Override
-    public void close() {
-        try {
-            document.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to close the file.", e);
-        }
-    }
+	@Override
+	public void close() {
+		try {
+			document.close();
+		} catch (IOException e) {
+			throw new PdfgenException("Failed to close the file.", e);
+		}
+	}
 }

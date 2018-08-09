@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tratif.pdfgen.asserts.helpers;
+package com.tratif.pdfgen.utils;
 
-public class SimpleParameter {
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
-	private String content;
+public class ToFileConverter {
 
-	public SimpleParameter(String content) {
-		this.content = content;
-	}
-
-	public String getContent() {
-		return content;
+	public static File convert(String content, String fileExtension) throws IOException {
+		File file = Files.createTempFile("pdfgen", "." + fileExtension).toFile();
+		Files.write(file.toPath(), content.getBytes());
+		return file;
 	}
 }

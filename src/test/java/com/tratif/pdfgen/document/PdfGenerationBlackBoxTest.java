@@ -15,9 +15,7 @@
  */
 package com.tratif.pdfgen.document;
 
-import com.tratif.pdfgen.document.renderers.html.HtmlTemplateEngine;
 import org.junit.Test;
-import org.thymeleaf.TemplateEngine;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -65,8 +63,5 @@ public class PdfGenerationBlackBoxTest {
 		assertThat(pdfDocument)
 				.contains("Hello")
 				.contains("world");
-
-		Document.fromHtmlTemplate("123")
-				.
 	}
 }

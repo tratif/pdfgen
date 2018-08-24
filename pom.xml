@@ -39,6 +39,13 @@
         </developer>
     </developers>
 
+	<scm>
+		<connection>scm:git:ssh://github.com/tratif/pdfgen.git</connection>
+		<url>scm:git:https://github.com/tratif/pdfgen.git</url>
+		<developerConnection>scm:git:ssh://github.com/tratif/pdfgen.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

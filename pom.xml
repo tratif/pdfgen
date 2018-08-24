@@ -42,7 +42,7 @@
 	<scm>
 		<connection>scm:git:ssh://github.com/tratif/pdfgen.git</connection>
 		<url>scm:git:https://github.com/tratif/pdfgen.git</url>
-		<developerConnection>scm:git:ssh://github.com/tratif/pdfgen.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:tratif/pdfgen.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 

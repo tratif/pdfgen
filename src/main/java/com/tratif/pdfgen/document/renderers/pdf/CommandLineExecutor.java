@@ -53,7 +53,7 @@ class CommandLineExecutor {
 	CommandLineExecutor withArguments(Map<String, String> properties) {
 		properties.forEach((key, value) -> {
 			cmd.add(key);
-			cmd.add(value);
+			if(!value.isEmpty()) cmd.add(value);
 		});
 
 		return this;

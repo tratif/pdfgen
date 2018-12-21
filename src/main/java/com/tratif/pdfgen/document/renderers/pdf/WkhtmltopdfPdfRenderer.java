@@ -15,6 +15,7 @@
  */
 package com.tratif.pdfgen.document.renderers.pdf;
 
+import com.google.common.io.CharStreams;
 import com.tratif.pdfgen.document.docs.HtmlDocument;
 import com.tratif.pdfgen.document.docs.PdfDocument;
 import com.tratif.pdfgen.document.renderers.PdfRenderer;
@@ -49,6 +50,8 @@ public class WkhtmltopdfPdfRenderer implements PdfRenderer {
 					.withArgument(destination.getPath())
 					.execute();
 
+			System.out.println(CharStreams.toString(new InputStreamReader(process.getInputStream())));
+			System.out.println(CharStreams.toString(new InputStreamReader(process.getErrorStream())));
 			logStream(log, process.getErrorStream());
 			int exitCode = process.waitFor();
 
@@ -57,7 +60,7 @@ public class WkhtmltopdfPdfRenderer implements PdfRenderer {
 			}
 
 			return new PdfDocument(destination);
-		} catch (InterruptedException e) {
+		} catch (InterruptedException |IOException e) {
 			throw new PdfgenException("There was problem executing command.", e);
 		}
 	}

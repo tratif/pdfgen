@@ -17,8 +17,9 @@ package com.tratif.pdfgen.document.renderers;
 
 import com.tratif.pdfgen.document.docs.HtmlDocument;
 import com.tratif.pdfgen.document.docs.PdfDocument;
+import org.slf4j.Logger;
 
-import java.io.File;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -27,4 +28,15 @@ public interface PdfRenderer {
 	PdfDocument render(HtmlDocument document, File destination, Map<String, String> renderParams);
 
 	PdfDocument render(List<HtmlDocument> documents, File destination, Map<String, String> renderParams);
+
+	default void logStream(Logger log, InputStream stream) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				log.debug(line);
+			}
+		} catch (IOException e) {
+			log.warn("There was a problem reading stream.", e);
+		}
+	}
 }

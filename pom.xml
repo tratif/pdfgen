@@ -184,5 +184,10 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.common.io.CharStreams</groupId>
+            <artifactId>CharStreams</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

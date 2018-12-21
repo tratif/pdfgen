@@ -49,7 +49,7 @@ public class WkhtmltopdfPdfRenderer implements PdfRenderer {
 					.withArgument(destination.getPath())
 					.execute();
 
-			logStream(process.getErrorStream());
+			logStream(log, process.getErrorStream());
 			int exitCode = process.waitFor();
 
 			if (exitCode != 0) {
@@ -62,14 +62,4 @@ public class WkhtmltopdfPdfRenderer implements PdfRenderer {
 		}
 	}
 
-	private void logStream(InputStream stream) {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				log.debug(line);
-			}
-		} catch (IOException e) {
-			log.warn("There was a problem reading stream.", e);
-		}
-	}
 }

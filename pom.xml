@@ -4,12 +4,12 @@
 
     <groupId>com.tratif</groupId>
     <artifactId>pdfgen</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>pdfgen</name>
     <description>
         An API for creating PDF files both from static HTML and Thymeleaf templates.
-        This library is based on wkhtmltopdf software.
+        This library is based on chromehtml2pdf software.
     </description>
     <inceptionYear>2018</inceptionYear>
 
@@ -30,6 +30,13 @@
         </developer>
         <developer>
             <name>Maciej Nowicki</name>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <organization>tratif.com</organization>
+        </developer>
+        <developer>
+            <name>Michał Krajewski</name>
             <roles>
                 <role>Developer</role>
             </roles>
@@ -182,11 +189,6 @@
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.common.io.CharStreams</groupId>
-            <artifactId>CharStreams</artifactId>
         </dependency>
 
     </dependencies>

@@ -4,9 +4,7 @@ The library for creating PDF files from html documents.
 
 ### System requirements ###
 
-This library requires `wkhtmltopdf 0.12.4 with patched Qt` to be installed on your machine. It should be added to system path. You can download it from [here](https://wkhtmltopdf.org/).
-
-`WARNING: Some Linux distributions may have old, not patched versions of wkhtmltopdf in their repositiories.`
+This library requires `chromehtml2pdf` to be installed on your machine. It should be added to system path. You can download it from [here](https://www.npmjs.com/package/chromehtml2pdf).
 
 Basic usage
 ---------------
@@ -31,27 +29,34 @@ It is possible to customize the generated PDF using the following parameters:
     * Landscape
 * Page dimensions
 * Page size
-    * A4
     * Letter
-* Zoom
-* Quality
+    * Legal
+    * Tabloid
+    * Ledger
+    * A0
+    * A1
+    * A2
+    * A3
+    * A4
+    * A5
+    * A6
+* Scale
 * Margins
-* Minimum font size
-* No background
-* Grayscale
-* Enable/Disable smart shrinking
+* With background
+* Custom header and footer
 
 ### Setting parameters ###
 
-The following call will set portrait orientation, left margin, right margin and grayscale:
+The following call will set portrait page format, orientation, left margin, right margin and printing background:
 ```java
 Document.fromStaticHtml("<html>")
         .and()
         .withParameters()
+            .pageFormat("A5")
             .portrait()
             .marginLeft("2cm")
             .marginRight("2cm")
-            .grayscale()
+            .withBackground()
         .and()
         .toPdf();
 ```

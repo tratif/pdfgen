@@ -1,3 +1,9 @@
+v1.0.0 NOT RELEASED
+============
+
+* introduced chromehtml2pdf renderer engine
+* removed support for wkhtmltopdf renderer engine
+
 v0.0.1 NOT RELEASED
 ============
 

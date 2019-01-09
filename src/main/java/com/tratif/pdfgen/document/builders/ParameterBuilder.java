@@ -15,6 +15,12 @@
  */
 package com.tratif.pdfgen.document.builders;
 
+import com.tratif.pdfgen.exceptions.PdfgenException;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,97 +42,107 @@ public class ParameterBuilder {
 	}
 
 	public ParameterBuilder landscape() {
-		params.put("--orientation", "Landscape");
+		params.put("--landscape", "true");
 		return this;
 	}
 
 	public ParameterBuilder portrait() {
-		params.put("--orientation", "Portrait");
+		params.put("--landscape", "false");
 		return this;
 	}
 
 	public ParameterBuilder pageHeight(String height) {
-		params.put("--page-height", height);
+		params.put("--height", height);
 		return this;
 	}
 
 	public ParameterBuilder pageWidth(String width) {
-		params.put("--page-width", width);
+		params.put("--width", width);
 		return this;
 	}
 
-	public ParameterBuilder pageSize(String size) {
-		params.put("--page-size", size);
+	public ParameterBuilder pageFormat(String format) {
+		params.put("--pageFormat", format);
 		return this;
 	}
 
 	public ParameterBuilder a4() {
-		params.put("--page-size", "A4");
+		params.put("--pageFormat", "A4");
 		return this;
 	}
 
-	public ParameterBuilder zoom(double zoom) {
-		params.put("--zoom", Double.toString(zoom));
-		return this;
-	}
-
-	public ParameterBuilder lowQuality() {
-		params.put("--lowquality", "");
+	public ParameterBuilder scale(double scale) {
+		params.put("--scale", Double.toString(scale));
 		return this;
 	}
 
 	public ParameterBuilder marginLeft(String size) {
-		params.put("--margin-left", size);
+		params.put("--marginLeft", size);
 		return this;
 	}
 
 	public ParameterBuilder marginTop(String size) {
-		params.put("--margin-top", size);
+		params.put("--marginTop", size);
 		return this;
 	}
 
 	public ParameterBuilder marginRight(String size) {
-		params.put("--margin-right", size);
+		params.put("--marginRight", size);
 		return this;
 	}
 
 	public ParameterBuilder marginBottom(String size) {
-		params.put("--margin-bottom", size);
+		params.put("--marginBottom", size);
 		return this;
 	}
 
-	public ParameterBuilder minimumFontSize(int size) {
-		params.put("--minimum-font-size", Integer.toString(size));
+	public ParameterBuilder withBackground() {
+		params.put("--printBackground", "true");
 		return this;
 	}
 
-	public ParameterBuilder noBackground() {
-		params.put("--no-background", "");
+	public ParameterBuilder displayOnlyHeader() {
+		params.put("--displayHeaderFooter", "true");
+		emptyFooter();
 		return this;
 	}
 
-	public ParameterBuilder grayscale() {
-		params.put("--grayscale", "");
+	public ParameterBuilder displayOnlyFooter() {
+		params.put("--displayHeaderFooter", "true");
+		emptyHeader();
 		return this;
 	}
 
-	public ParameterBuilder disableSmartShrinking() {
-		params.put("--disable-smart-shrinking", "");
+	public ParameterBuilder displayHeaderAndFooter() {
+		params.put("--displayHeaderFooter", "true");
 		return this;
 	}
 
-	public ParameterBuilder enableSmartShrinking() {
-		params.put("--enable-smart-shrinking", "");
+	public ParameterBuilder footerHtml(String path) {
+		try {
+			params.put("--footerTemplate", "'" + readFromFile(path) + "'");
+		} catch (IOException e) {
+			throw new PdfgenException("Error while loading footer", e);
+		}
 		return this;
 	}
 
-	public ParameterBuilder footerHtml(String filename) {
-		params.put("--footer-html", filename);
+	public ParameterBuilder headerHtml(String path) {
+		try {
+			params.put("--headerTemplate", "'" + readFromFile(path) + "'");
+		} catch (IOException e) {
+			throw new PdfgenException("Error while loading header", e);
+		}
 		return this;
 	}
 
-	public ParameterBuilder headerHtml(String filename) {
-		params.put("--header-html", filename);
+	public ParameterBuilder emptyHeader() {
+		params.put("--headerTemplate", "'<p></p>'");
+		return this;
+	}
+
+	public ParameterBuilder emptyFooter() {
+		params.put("--footerTemplate", "'<p></p>'");
 		return this;
 	}
 
@@ -136,5 +152,10 @@ public class ParameterBuilder {
 
 	public Map<String, String> build() {
 		return params;
+	}
+
+	private String readFromFile(String path) throws IOException {
+		byte[] encoded = Files.readAllBytes(Paths.get(path));
+		return new String(encoded, Charset.forName("UTF-8"));
 	}
 }

@@ -24,7 +24,7 @@ import com.tratif.pdfgen.document.mergers.html.JsoupHtmlMerger;
 import com.tratif.pdfgen.document.providers.HtmlTemplateEngineProvider;
 import com.tratif.pdfgen.document.renderers.PdfRenderer;
 import com.tratif.pdfgen.document.renderers.html.HtmlTemplateEngine;
-import com.tratif.pdfgen.document.renderers.pdf.WkhtmltopdfPdfRenderer;
+import com.tratif.pdfgen.document.renderers.pdf.Chromehtml2pdfRenderer;
 import com.tratif.pdfgen.exceptions.PdfgenException;
 
 import java.io.File;
@@ -45,7 +45,7 @@ public class DocumentBuilder {
 
 	public DocumentBuilder() {
 		pages = new ArrayList<>();
-		pdfRenderer = new WkhtmltopdfPdfRenderer();
+		pdfRenderer = new Chromehtml2pdfRenderer();
 		htmlMerger = new JsoupHtmlMerger();
 		renderParams = new ParameterBuilder(this);
 	}

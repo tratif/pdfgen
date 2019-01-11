@@ -4,7 +4,7 @@ The library for creating PDF files from html documents.
 
 ### System requirements ###
 
-This library requires `chromehtml2pdf` to be installed on your machine. It should be added to system path. You can download it from [here](https://www.npmjs.com/package/chromehtml2pdf).
+This library requires `chromehtml2pdf` to be installed on your machine. It should be added to the system path. You can download it from [here](https://www.npmjs.com/package/chromehtml2pdf).
 
 Basic usage
 ---------------
@@ -47,7 +47,7 @@ It is possible to customize the generated PDF using the following parameters:
 
 ### Setting parameters ###
 
-The following call will set portrait page format, orientation, left margin, right margin and printing background:
+The following call will set portrait page format, orientation, left margin, right margin and document background:
 ```java
 Document.fromStaticHtml("<html>")
         .and()
@@ -65,14 +65,14 @@ Document.fromStaticHtml("<html>")
 
 Header and footer are loaded from files, which can contain just single valid html markup or proper html template with embedded styles.
 
-Following classes can be used to inject printing values into them:
+Following html classes can be used to inject printing values into them:
 * date - formatted print date
 * title - document title
 * url - document location
 * pageNumber - current page number
 * totalPages - total pages in the document
 
-`Warning: Due to way chromehtml2pdf renders header and footer both of them needs to have specified font-size, otherwise it will not be visible.`
+`Warning: Due to way chromehtml2pdf renders header and footer both of them needs to have specified font-size, otherwise they will not be visible.`
 
 
 Thymeleaf templates
@@ -93,7 +93,6 @@ Document.fromHtmlTemplate(template, params)
             .portrait()
             .marginLeft("2cm")
             .marginRight("2cm")
-            .grayscale()
         .and()
         .toPdf();
 ```
@@ -117,7 +116,6 @@ Document.fromHtmlTemplate(template, params)
             .portrait()
             .marginLeft("2cm")
             .marginRight("2cm")
-            .grayscale()
         .and()
         .toPdf();
 ```

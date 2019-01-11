@@ -61,6 +61,20 @@ Document.fromStaticHtml("<html>")
         .toPdf();
 ```
 
+### Custom header and footer options ###
+
+Header and footer are loaded from files, which can contain just single valid html markup or proper html template with embedded styles.
+
+Following classes can be used to inject printing values into them:
+* date - formatted print date
+* title - document title
+* url - document location
+* pageNumber - current page number
+* totalPages - total pages in the document
+
+`Warning: Due to way chromehtml2pdf renders header and footer both of them needs to have specified font-size, otherwise it will not be visible.`
+
+
 Thymeleaf templates
 ---------------
 

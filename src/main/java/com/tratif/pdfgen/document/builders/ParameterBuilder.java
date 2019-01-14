@@ -120,7 +120,7 @@ public class ParameterBuilder {
 
 	public ParameterBuilder footerHtml(String path) {
 		try {
-			params.put("--footerTemplate", "'" + readFromFile(path) + "'");
+			params.put("--footerTemplate", readFromFile(path));
 		} catch (IOException e) {
 			throw new PdfgenException("Error while loading footer", e);
 		}
@@ -129,7 +129,7 @@ public class ParameterBuilder {
 
 	public ParameterBuilder headerHtml(String path) {
 		try {
-			params.put("--headerTemplate", "'" + readFromFile(path) + "'");
+			params.put("--headerTemplate", readFromFile(path));
 		} catch (IOException e) {
 			throw new PdfgenException("Error while loading header", e);
 		}
@@ -137,12 +137,12 @@ public class ParameterBuilder {
 	}
 
 	public ParameterBuilder emptyHeader() {
-		params.put("--headerTemplate", "'<p></p>'");
+		params.put("--headerTemplate", "<p></p>");
 		return this;
 	}
 
 	public ParameterBuilder emptyFooter() {
-		params.put("--footerTemplate", "'<p></p>'");
+		params.put("--footerTemplate", "<p></p>");
 		return this;
 	}
 

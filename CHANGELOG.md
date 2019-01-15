@@ -1,4 +1,4 @@
-v1.0.0 NOT RELEASED
+v0.1.0 NOT RELEASED
 ============
 
 * introduced chromehtml2pdf renderer engine
@@ -6,6 +6,8 @@ v1.0.0 NOT RELEASED
 
 v0.0.1 NOT RELEASED
 ============
+That version contained support for one pdf rendering engine - wkhtmltopdf - with basic API. 
+This version introduced support for two html rendering engines - FreeMarker and Thymeleaf. 
 
 * introduced static HTML to PDF conversion
 * introduced multiple page support

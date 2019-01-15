@@ -96,6 +96,9 @@ public class ParameterBuilder {
 		return this;
 	}
 
+	/**
+	 * this method enables printing with background defined in html file.
+	 */
 	public ParameterBuilder withBackground() {
 		params.put("--printBackground", "true");
 		return this;

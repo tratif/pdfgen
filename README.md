@@ -4,9 +4,7 @@ The library for creating PDF files from html documents.
 
 ### System requirements ###
 
-This library requires `wkhtmltopdf 0.12.4 with patched Qt` to be installed on your machine. It should be added to system path. You can download it from [here](https://wkhtmltopdf.org/).
-
-`WARNING: Some Linux distributions may have old, not patched versions of wkhtmltopdf in their repositiories.`
+This library requires `chromehtml2pdf` to be installed on your machine. It should be added to the system path. You can download it from [here](https://www.npmjs.com/package/chromehtml2pdf).
 
 Basic usage
 ---------------
@@ -31,30 +29,51 @@ It is possible to customize the generated PDF using the following parameters:
     * Landscape
 * Page dimensions
 * Page size
-    * A4
     * Letter
-* Zoom
-* Quality
+    * Legal
+    * Tabloid
+    * Ledger
+    * A0
+    * A1
+    * A2
+    * A3
+    * A4
+    * A5
+    * A6
+* Scale
 * Margins
-* Minimum font size
-* No background
-* Grayscale
-* Enable/Disable smart shrinking
+* With background
+* Custom header and footer
 
 ### Setting parameters ###
 
-The following call will set portrait orientation, left margin, right margin and grayscale:
+The following call will set portrait page format, orientation, left margin, right margin and document background:
 ```java
 Document.fromStaticHtml("<html>")
         .and()
         .withParameters()
+            .pageFormat("A5")
             .portrait()
             .marginLeft("2cm")
             .marginRight("2cm")
-            .grayscale()
+            .withBackground()
         .and()
         .toPdf();
 ```
+
+### Custom header and footer options ###
+
+Header and footer are loaded from files, which can contain just single valid html markup or proper html template with embedded styles.
+
+Following html classes can be used to inject printing values into them:
+* date - formatted print date
+* title - document title
+* url - document location
+* pageNumber - current page number
+* totalPages - total pages in the document
+
+`Warning: Due to way chromehtml2pdf renders header and footer both of them needs to have specified font-size, otherwise they will not be visible.`
+
 
 Thymeleaf templates
 ---------------
@@ -74,7 +93,6 @@ Document.fromHtmlTemplate(template, params)
             .portrait()
             .marginLeft("2cm")
             .marginRight("2cm")
-            .grayscale()
         .and()
         .toPdf();
 ```
@@ -98,7 +116,6 @@ Document.fromHtmlTemplate(template, params)
             .portrait()
             .marginLeft("2cm")
             .marginRight("2cm")
-            .grayscale()
         .and()
         .toPdf();
 ```

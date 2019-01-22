@@ -18,15 +18,11 @@ package com.tratif.pdfgen.document;
 import com.google.common.collect.ImmutableMap;
 import com.tratif.pdfgen.asserts.helpers.SimpleParameter;
 import com.tratif.pdfgen.document.builders.DocumentBuilder;
-import com.tratif.pdfgen.document.docs.PdfDocument;
 import com.tratif.pdfgen.document.renderers.html.HtmlTemplateEngine;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 
 import static com.tratif.pdfgen.asserts.PdfAssert.assertThat;
@@ -53,8 +49,8 @@ public class DocumentBuilderTest {
 				.withTemplateEngine(HtmlTemplateEngine.FREEMARKER)
 				.and()
 				.withParameters()
-				.noBackground()
-				.zoom(2)
+				.withBackground()
+				.scale(2)
 				.and()
 				.toPdf().toByteArray();
 
@@ -93,7 +89,7 @@ public class DocumentBuilderTest {
 					)
 					.withTemplateEngine(HtmlTemplateEngine.THYMELEAF)
 				.and().withParameters()
-					.noBackground()
+				.withBackground()
 					.a4()
 				.and()
 					.toPdf()
@@ -139,9 +135,8 @@ public class DocumentBuilderTest {
 				.fromHtmlTemplate("<p th:text=\"${testObject2.content}\">TEST</p>", params)
 				.and()
 				.withParameters()
-				.zoom(2)
+				.scale(2)
 				.landscape()
-				.grayscale()
 				.and()
 				.toPdf().toByteArray();
 

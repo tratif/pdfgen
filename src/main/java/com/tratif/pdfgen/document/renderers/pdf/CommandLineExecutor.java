@@ -23,62 +23,50 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 
 class CommandLineExecutor {
 
 	private static final Logger log = LoggerFactory.getLogger(CommandLineExecutor.class);
 
-	private String cmd;
-	private List<String> args;
+	private List<String> cmd;
 
 	CommandLineExecutor() {
-		args = new ArrayList<>();
+		cmd = new ArrayList<>();
 	}
 
 	CommandLineExecutor command(String cmd) {
-		args = new ArrayList<>();
-		this.cmd = cmd;
+		this.cmd = new ArrayList<>();
+		this.cmd.add(cmd);
 		return this;
 	}
 
 	CommandLineExecutor withArgument(String arg) {
-		args.add(arg);
+		cmd.add(arg);
 		return this;
 	}
 
 	CommandLineExecutor withArguments(List<String> args) {
-		this.args.addAll(args);
+		this.cmd.addAll(args);
 		return this;
 	}
 
 	CommandLineExecutor withArguments(Map<String, String> properties) {
-		properties.entrySet().stream()
-				.map(this::formatOptionalArgument)
-				.forEach(args::add);
+		properties.forEach((key, value) -> {
+			cmd.add(key);
+			if(!value.isEmpty()) cmd.add(value);
+		});
 
 		return this;
 	}
 
 	Process execute() {
 		Runtime runtime = Runtime.getRuntime();
-		StringJoiner joiner = new StringJoiner(" ");
-		joiner.add(cmd);
-		args.forEach(joiner::add);
+		String[] command = cmd.toArray(new String[0]);
 		try {
-			String command = joiner.toString();
 			log.debug("Running command: {}", command);
 			return runtime.exec(command);
 		} catch (IOException e) {
 			throw new PdfgenException("Running command has failed.", e);
 		}
-	}
-
-	private String formatOptionalArgument(Map.Entry<String, String> entry) {
-		if (entry.getValue().equals("")) {
-			return entry.getKey();
-		}
-
-		return entry.getKey() + " " + entry.getValue();
 	}
 }

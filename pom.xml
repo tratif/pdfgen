@@ -4,7 +4,7 @@
 
     <groupId>com.tratif</groupId>
     <artifactId>pdfgen</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0</version>
 
     <name>pdfgen</name>
     <description>
@@ -48,7 +48,7 @@
 		<connection>scm:git:ssh://github.com/tratif/pdfgen.git</connection>
 		<url>scm:git:https://github.com/tratif/pdfgen.git</url>
 		<developerConnection>scm:git:git@github.com:tratif/pdfgen.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>pdfgen-0.2.0</tag>
 	</scm>
 
     <properties>
@@ -192,4 +192,17 @@
         </dependency>
 
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>maven-nexus-release-repo</id>
+            <name>Nexus Release Repository</name>
+            <url>https://nexus.fitart.tk/repository/s3release/</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-nexus-snapshot-repo</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>https://nexus.fitart.tk/repository/s3snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

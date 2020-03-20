@@ -4,7 +4,7 @@
 
     <groupId>com.tratif</groupId>
     <artifactId>pdfgen</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1-SNAPSHOT</version>
 
     <name>pdfgen</name>
     <description>
@@ -48,7 +48,7 @@
 		<connection>scm:git:ssh://github.com/tratif/pdfgen.git</connection>
 		<url>scm:git:https://github.com/tratif/pdfgen.git</url>
 		<developerConnection>scm:git:git@github.com:tratif/pdfgen.git</developerConnection>
-		<tag>pdfgen-0.2.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
     <properties>

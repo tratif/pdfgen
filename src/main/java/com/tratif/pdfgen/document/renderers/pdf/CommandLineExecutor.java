@@ -44,19 +44,19 @@ class CommandLineExecutor {
 	}
 
 	CommandLineExecutor withArgument(String arg) {
-		cmd.add(escapeArgument(arg));
+		cmd.add(escapeString(arg));
 		return this;
 	}
 
 	CommandLineExecutor withArguments(List<String> args) {
-		args.forEach(arg -> cmd.add(escapeArgument(arg)));
+		args.forEach(arg -> cmd.add(escapeString(arg)));
 		return this;
 	}
 
 	CommandLineExecutor withArguments(Map<String, String> properties) {
 		properties.forEach((key, value) -> {
-			cmd.add(escapeArgument(key));
-			if (!value.isEmpty()) cmd.add(escapeArgument(value));
+			cmd.add(escapeString(key));
+			if (!value.isEmpty()) cmd.add(escapeString(value));
 		});
 		return this;
 	}
@@ -85,7 +85,7 @@ class CommandLineExecutor {
 		return commandBuilder.toString();
 	}
 
-	private String escapeArgument(String arg) {
+	private String escapeString(String arg) {
 		if (arg.contains("'")) {
 			arg = arg.replace("'", "'\"'\"'");
 		}

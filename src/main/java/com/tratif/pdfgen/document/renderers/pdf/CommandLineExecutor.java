@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.nonNull;
 
@@ -32,7 +31,7 @@ class CommandLineExecutor {
 	private static final Logger log = LoggerFactory.getLogger(CommandLineExecutor.class);
 
 	private List<String> cmd;
-	private Long ulimit = null;
+	private Long memoryLimitInKb = null;
 
 	CommandLineExecutor() {
 		cmd = new ArrayList<>();
@@ -63,7 +62,7 @@ class CommandLineExecutor {
 	}
 
 	CommandLineExecutor withMemoryLimit(Long ulimit) {
-		this.ulimit = ulimit;
+		this.memoryLimitInKb = ulimit;
 		return this;
 	}
 
@@ -79,8 +78,8 @@ class CommandLineExecutor {
 
 	private String buildCommandWithUlimit() {
 		StringBuilder commandBuilder = new StringBuilder();
-		if (nonNull(ulimit)) {
-			commandBuilder.append("ulimit -v ").append(ulimit).append(" && ");
+		if (nonNull(memoryLimitInKb)) {
+			commandBuilder.append("ulimit -v ").append(memoryLimitInKb).append(" && ");
 		}
 		commandBuilder.append(String.join(" ", cmd));
 		return commandBuilder.toString();

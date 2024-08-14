@@ -48,10 +48,9 @@ public class Chromehtml2pdfRenderer implements PdfRenderer {
 	@Override
 	public PdfDocument render(HtmlDocument document, File destination, Map<String, String> renderParams) {
 		log.info("Rendering PDF using configuration: {}", rendererConfiguration);
-
 		ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-		Future<Process> processFuture = executorService.submit(() -> {
+		try {
 			CommandLineExecutor executor = new CommandLineExecutor();
 
 			Process process = executor.command("chromehtml2pdf")
@@ -61,17 +60,13 @@ public class Chromehtml2pdfRenderer implements PdfRenderer {
 					.withMemoryLimit(rendererConfiguration.getMemoryLimitInKb())
 					.execute();
 
-			return process;
-		});
-
-		try {
 			Duration rendererTimeout = rendererConfiguration.getRendererTimeout();
 
-			Process process = nonNull(rendererTimeout)
-					? processFuture.get(rendererTimeout.getSeconds(), TimeUnit.SECONDS)
-					: processFuture.get();
-
-			logStream(log, process.getErrorStream());
+			executorService.submit(() -> {
+				// logStream method can block current thread
+				// to ensure proper working of rendered timeout, logStream is called in separate thread
+				logStream(log, process.getErrorStream());
+			});
 
 			int processExitCode;
 
@@ -94,16 +89,17 @@ public class Chromehtml2pdfRenderer implements PdfRenderer {
 			return new PdfDocument(destination);
 
 		} catch (InterruptedException e) {
-			processFuture.cancel(true);
 			throw new PdfgenException("There was problem executing command.", e);
-		} catch (ExecutionException e) {
-			processFuture.cancel(true);
-			throw new RuntimeException(e);
-		} catch (TimeoutException e) {
-			processFuture.cancel(true);
-			throw new PdfgenException("Generating pdf timed out after " + rendererConfiguration.getRendererTimeout().getSeconds() + " seconds");
 		} finally {
-			executorService.shutdownNow();
+			executorService.shutdown();
+
+			try {
+				if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+					executorService.shutdownNow();
+				}
+			} catch (InterruptedException e) {
+				executorService.shutdownNow();
+			}
 		}
 	}
 

@@ -23,12 +23,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.Objects.nonNull;
 
 class CommandLineExecutor {
 
 	private static final Logger log = LoggerFactory.getLogger(CommandLineExecutor.class);
 
 	private List<String> cmd;
+	private Long ulimit = null;
 
 	CommandLineExecutor() {
 		cmd = new ArrayList<>();
@@ -41,32 +45,52 @@ class CommandLineExecutor {
 	}
 
 	CommandLineExecutor withArgument(String arg) {
-		cmd.add(arg);
+		cmd.add(escapeArgument(arg));
 		return this;
 	}
 
 	CommandLineExecutor withArguments(List<String> args) {
-		this.cmd.addAll(args);
+		args.forEach(arg -> cmd.add(escapeArgument(arg)));
 		return this;
 	}
 
 	CommandLineExecutor withArguments(Map<String, String> properties) {
 		properties.forEach((key, value) -> {
-			cmd.add(key);
-			if(!value.isEmpty()) cmd.add(value);
+			cmd.add(escapeArgument(key));
+			if (!value.isEmpty()) cmd.add(escapeArgument(value));
 		});
+		return this;
+	}
 
+	CommandLineExecutor withMemoryLimit(Long ulimit) {
+		this.ulimit = ulimit;
 		return this;
 	}
 
 	Process execute() {
 		Runtime runtime = Runtime.getRuntime();
-		String[] command = cmd.toArray(new String[0]);
+		String fullCommand = buildCommandWithUlimit();
 		try {
-			log.debug("Running command: {}", command);
-			return runtime.exec(command);
+			return runtime.exec(new String[]{"/bin/bash", "-c", fullCommand});
 		} catch (IOException e) {
 			throw new PdfgenException("Running command has failed.", e);
 		}
 	}
+
+	private String buildCommandWithUlimit() {
+		StringBuilder commandBuilder = new StringBuilder();
+		if (nonNull(ulimit)) {
+			commandBuilder.append("ulimit -v ").append(ulimit).append(" && ");
+		}
+		commandBuilder.append(String.join(" ", cmd));
+		return commandBuilder.toString();
+	}
+
+	private String escapeArgument(String arg) {
+		if (arg.contains("'")) {
+			arg = arg.replace("'", "'\"'\"'");
+		}
+		return "'" + arg + "'";
+	}
+
 }

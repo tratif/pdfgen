@@ -1,12 +1,12 @@
 /**
  * Copyright 2018 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,33 +27,83 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 public class Chromehtml2pdfRenderer implements PdfRenderer {
 
 	private static final Logger log = LoggerFactory.getLogger(Chromehtml2pdfRenderer.class);
 
+	private final RendererConfiguration rendererConfiguration;
+
+	public Chromehtml2pdfRenderer(RendererConfiguration rendererConfiguration) {
+		this.rendererConfiguration = rendererConfiguration;
+	}
+
 	@Override
 	public PdfDocument render(HtmlDocument document, File destination, Map<String, String> renderParams) {
-		try {
+		log.info("Rendering PDF using configuration: {}", rendererConfiguration);
+
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+		Future<Process> processFuture = executorService.submit(() -> {
 			CommandLineExecutor executor = new CommandLineExecutor();
+
 			Process process = executor.command("chromehtml2pdf")
 					.withArgument("--out=" + destination.getPath())
 					.withArgument("file://" + document.asFile().getPath())
 					.withArguments(renderParams)
+					.withMemoryLimit(rendererConfiguration.getMemoryLimitInKb())
 					.execute();
 
+			return process;
+		});
+
+		try {
+			Duration rendererTimeout = rendererConfiguration.getRendererTimeout();
+
+			Process process = nonNull(rendererTimeout)
+					? processFuture.get(rendererTimeout.getSeconds(), TimeUnit.SECONDS)
+					: processFuture.get();
+
 			logStream(log, process.getErrorStream());
-			int exitCode = process.waitFor();
-			if (exitCode != 0) {
-				throw new PdfgenException("Generating pdf failed due to unknown error. (exit code: " + exitCode + ")");
+
+			int processExitCode;
+
+			if (nonNull(rendererTimeout)) {
+				boolean processHasExited = process.waitFor(rendererTimeout.getSeconds(), TimeUnit.SECONDS);
+				if (!processHasExited) {
+					process.destroy();
+					throw new PdfgenException("Generating pdf timed out after " + rendererTimeout.getSeconds() + " seconds");
+				} else {
+					processExitCode = process.exitValue();
+				}
+			} else {
+				processExitCode = process.waitFor();
 			}
+
+			if (processExitCode != 0) {
+				throw new PdfgenException("Generating pdf failed due to unknown error. (exit code: " + processExitCode + ")");
+			}
+
 			return new PdfDocument(destination);
 
 		} catch (InterruptedException e) {
+			processFuture.cancel(true);
 			throw new PdfgenException("There was problem executing command.", e);
+		} catch (ExecutionException e) {
+			processFuture.cancel(true);
+			throw new RuntimeException(e);
+		} catch (TimeoutException e) {
+			processFuture.cancel(true);
+			throw new PdfgenException("Generating pdf timed out after " + rendererConfiguration.getRendererTimeout().getSeconds() + " seconds");
+		} finally {
+			executorService.shutdownNow();
 		}
 	}
 

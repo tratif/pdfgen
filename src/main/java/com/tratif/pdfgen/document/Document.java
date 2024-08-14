@@ -24,82 +24,85 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class Document {
+	
+	public static Supplier<DocumentBuilder> documentBuilder = DocumentBuilder::new;
 
 	public static PageBuilder fromStaticHtml(String html) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromStaticHtml(html);
 	}
 
 	public static PageBuilder fromStaticHtml(InputStream inputStream) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromStaticHtml(inputStream);
 	}
 
 	public static PageBuilder fromStaticHtml(Reader reader) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromStaticHtml(reader);
 	}
 
 	public static PageBuilder fromStaticHtml(URL url) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromStaticHtml(url);
 	}
 
 	public static PageBuilder fromStaticHtml(File file) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromStaticHtml(file);
 	}
 
 	public static PageBuilder fromStaticHtml(Path path) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromStaticHtml(path);
 	}
 
 	public static PageBuilder fromHtmlTemplate(String htmlTemplate, Map<String, Object> params) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromHtmlTemplate(htmlTemplate, params);
 	}
 
 	public static PageBuilder fromHtmlTemplate(InputStream inputStream, Map<String, Object> params) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromHtmlTemplate(inputStream, params);
 	}
 
 	public static PageBuilder fromHtmlTemplate(Reader reader, Map<String, Object> params) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromHtmlTemplate(reader, params);
 	}
 
 	public static PageBuilder fromHtmlTemplate(URL url, Map<String, Object> params) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromHtmlTemplate(url, params);
 	}
 
 	public static PageBuilder fromHtmlTemplate(File file, Map<String, Object> params) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromHtmlTemplate(file, params);
 	}
 
 	public static PageBuilder fromHtmlTemplate(Path path, Map<String, Object> params) {
-		return new DocumentBuilder()
+		return documentBuilder.get()
 				.withPage()
 				.fromHtmlTemplate(path, params);
 	}
 
 	public static PageBuilder withPage() {
-		return new DocumentBuilder().withPage();
+		return documentBuilder.get().withPage();
 	}
 }

@@ -1,8 +1,8 @@
 0.3.0
 ============
 * Added support for configuring timeout and memory limit for pdf rendering.
-  * To configure pdf rendered timeout/memory limit, override static field `documentBuilder` in `Document`
-    * example:
+  * To configure pdf rendered timeout/memory limit, re-assign static field `documentBuilder` in `Document`
+    * example 1:
       ```java
         import java.time.Duration;Document.documentBuilder = () -> new DocumentBuilder(
             new RendererConfiguration(
@@ -10,6 +10,12 @@
                 1024L*1024L //1GB in KB
             ) 
         );
+      ```
+    * example 2:
+      ```java
+        public void configure(RendererConfiguration rendererConfiguration) {
+	    	    Document.documentBuilder = () -> new DocumentBuilder(rendererConfiguration);
+        }
       ```
 
 0.2.0

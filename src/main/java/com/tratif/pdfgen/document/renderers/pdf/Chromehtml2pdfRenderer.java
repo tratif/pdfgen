@@ -27,33 +27,79 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 public class Chromehtml2pdfRenderer implements PdfRenderer {
 
 	private static final Logger log = LoggerFactory.getLogger(Chromehtml2pdfRenderer.class);
 
+	private final RendererConfiguration rendererConfiguration;
+
+	public Chromehtml2pdfRenderer(RendererConfiguration rendererConfiguration) {
+		this.rendererConfiguration = rendererConfiguration;
+	}
+
 	@Override
 	public PdfDocument render(HtmlDocument document, File destination, Map<String, String> renderParams) {
+		log.info("Rendering PDF using configuration: {}", rendererConfiguration);
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+
 		try {
 			CommandLineExecutor executor = new CommandLineExecutor();
+
 			Process process = executor.command("chromehtml2pdf")
 					.withArgument("--out=" + destination.getPath())
 					.withArgument("file://" + document.asFile().getPath())
 					.withArguments(renderParams)
+					.withMemoryLimit(rendererConfiguration.getMemoryLimitInKb())
 					.execute();
 
-			logStream(log, process.getErrorStream());
-			int exitCode = process.waitFor();
-			if (exitCode != 0) {
-				throw new PdfgenException("Generating pdf failed due to unknown error. (exit code: " + exitCode + ")");
+			Duration rendererTimeout = rendererConfiguration.getRendererTimeout();
+
+			executorService.submit(() -> {
+				// logStream method can block current thread
+				// to ensure proper working of rendered timeout, logStream is called in separate thread
+				logStream(log, process.getErrorStream());
+			});
+
+			int processExitCode;
+
+			if (nonNull(rendererTimeout)) {
+				boolean processHasExited = process.waitFor(rendererTimeout.getSeconds(), TimeUnit.SECONDS);
+				if (!processHasExited) {
+					process.destroy();
+					throw new PdfgenException("Generating pdf timed out after " + rendererTimeout.getSeconds() + " seconds");
+				} else {
+					processExitCode = process.exitValue();
+				}
+			} else {
+				processExitCode = process.waitFor();
 			}
+
+			if (processExitCode != 0) {
+				throw new PdfgenException("Generating pdf failed due to unknown error. (exit code: " + processExitCode + ")");
+			}
+
 			return new PdfDocument(destination);
 
 		} catch (InterruptedException e) {
 			throw new PdfgenException("There was problem executing command.", e);
+		} finally {
+			executorService.shutdown();
+
+			try {
+				if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+					executorService.shutdownNow();
+				}
+			} catch (InterruptedException e) {
+				executorService.shutdownNow();
+			}
 		}
 	}
 

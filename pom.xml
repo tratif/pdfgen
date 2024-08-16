@@ -4,7 +4,7 @@
 
     <groupId>com.tratif</groupId>
     <artifactId>pdfgen</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1-SNAPSHOT</version>
 
     <name>pdfgen</name>
     <description>
